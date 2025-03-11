@@ -1,74 +1,89 @@
 #include <iostream>
+#include "GrafoLista.h"
+#include "GrafoMatriz.h"
+
 using namespace std;
+
+template <typename T>
+void menuGrafo(const std::string& titulo, T& grafo) {
+    int op;
+    do {
+        std::cout << "\n--- " << titulo << " ---\n";
+        std::cout << "1 - Adicionar vértice\n";
+        std::cout << "2 - Remover vértice\n";
+        std::cout << "3 - Adicionar aresta\n";
+        std::cout << "4 - Remover aresta\n";
+        std::cout << "5 - Exibir grafo\n";
+        std::cout << "6 - Voltar\n";
+        std::cout << "Escolha: ";
+        std::cin >> op;
+
+        switch (op) {
+            case 1: {
+                std::string label;
+                std::cout << "Digite o rótulo do vértice: ";
+                std::cin >> label;
+                grafo.inserirVertice(label);
+                break;
+            }
+            case 2: {
+                int indice;
+                std::cout << "Digite o índice do vértice a ser removido: ";
+                std::cin >> indice;
+                grafo.removerVertice(indice);
+                break;
+            }
+            case 3: {
+                int origem, destino, peso;
+                std::cout << "Digite o índice de origem, destino e o peso da aresta: ";
+                std::cin >> origem >> destino >> peso;
+                grafo.inserirAresta(origem, destino, peso);
+                break;
+            }
+            case 4: {
+                int origem, destino;
+                std::cout << "Digite os índices de origem e destino da aresta a ser removida: ";
+                std::cin >> origem >> destino;
+                grafo.removerAresta(origem, destino);
+                break;
+            }
+            case 5:
+                grafo.imprime();
+                break;
+            case 6:
+                std::cout << "Voltando...\n";
+                break;
+            default:
+                std::cout << "Opção inválida! Tente novamente.\n";
+        }
+    } while (op != 6);
+}
 
 int main() {
     int escolha, op;
+    GrafoLista grafoLista(false, false); // Grafo não direcionado e não ponderado
+    GrafoMatriz grafoMatriz(false, false);
 
     do {
-        cout << "\n===== MENU PRINCIPAL =====\n";
-        cout << "1 - Usar Lista de Adjacência\n";
-        cout << "2 - Usar Matriz de Adjacência\n";
-        cout << "3 - Sair\n";
-        cout << "Escolha uma opção: ";
-        cin >> escolha;
+        std::cout << "\n===== MENU PRINCIPAL =====\n";
+        std::cout << "1 - Usar Lista de Adjacência\n";
+        std::cout << "2 - Usar Matriz de Adjacência\n";
+        std::cout << "3 - Sair\n";
+        std::cout << "Escolha uma opção: ";
+        std::cin >> escolha;
 
         switch (escolha) {
             case 1:
-                do {
-                    cout << "\n--- Lista de Adjacência ---\n";
-                    cout << "1 - Adicionar aresta\n";
-                    cout << "2 - Exibir grafo\n";
-                    cout << "3 - Voltar ao menu principal\n";
-                    cout << "Escolha: ";
-                    cin >> op;
-
-                    switch (op) {
-                        case 1:
-                            cout << "Opção de adicionar aresta escolhida.\n";
-                            break;
-                        case 2:
-                            cout << "Opção de exibir grafo escolhida.\n";
-                            break;
-                        case 3:
-                            cout << "Voltando ao menu principal...\n";
-                            break;
-                        default:
-                            cout << "Opção inválida! Tente novamente.\n";
-                    }
-                } while (op != 3);
+                menuGrafo("Lista de Adjacência", grafoLista);
                 break;
-
             case 2:
-                do {
-                    cout << "\n--- Matriz de Adjacência ---\n";
-                    cout << "1 - Adicionar aresta\n";
-                    cout << "2 - Exibir grafo\n";
-                    cout << "3 - Voltar ao menu principal\n";
-                    cout << "Escolha: ";
-                    cin >> op;
-
-                    switch (op) {
-                        case 1:
-                            cout << "Opção de adicionar aresta escolhida.\n";
-                            break;
-                        case 2:
-                            cout << "Opção de exibir grafo escolhida.\n";
-                            break;
-                        case 3:
-                            cout << "Voltando ao menu principal...\n";
-                            break;
-                        default:
-                            cout << "Opção inválida! Tente novamente.\n";
-                    }
-                } while (op != 3);
+                menuGrafo("Matriz de Adjacência", grafoMatriz);
                 break;
-
             case 3:
-                cout << "Saindo do programa...\n";
+                std::cout << "Saindo do programa...\n";
                 break;
-
             default:
-                cout << "Opção inválida! Tente novamente.\n";
+                std::cout << "Opção inválida! Tente novamente.\n";
         }
     } while (escolha != 3);
 

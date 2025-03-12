@@ -4,8 +4,7 @@
 
 using namespace std;
 
-template <typename T>
-void menuGrafo(const std::string& titulo, T& grafo) {
+void menuGrafo(const std::string& titulo, Grafo& grafo) {
     int op;
     do {
         std::cout << "\n--- " << titulo << " ---\n";

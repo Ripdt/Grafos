@@ -31,18 +31,6 @@ public:
         return MatrixRow(m.at(x));
     }
 
-    bool addRow() {
-      m.push_back(std::vector<Type>(m[0].size(), 0));
-      return true;
-    }
-
-    bool addColumn() {
-      for (auto& row : m) {
-        row.push_back(0);
-      }
-      return true;
-    }
-
     size_t nRows() const
     {
       return m.size();
@@ -51,6 +39,18 @@ public:
     size_t nColumns() const
     {
       return m[0].size();
+    }
+
+    bool addRow() {
+      m.push_back(std::vector<Type>(nColumns(), 0));
+      return true;
+    }
+
+    bool addColumn() {
+      for (auto& row : m) {
+        row.push_back(0);
+      }
+      return true;
     }
 
     class ConstMatrixRow {

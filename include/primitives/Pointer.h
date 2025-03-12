@@ -43,8 +43,6 @@ private:
   ReferenceCounter* rc = new ReferenceCounter();
 };
 
-
-
 //-----------------------------------------------------------------------------------
 
 template<typename T>

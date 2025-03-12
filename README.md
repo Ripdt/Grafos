@@ -7,11 +7,13 @@ Implementation of a Graph.
   
 
 * Windows:
-
-```./build.bat```
+```console
+./build.bat
+```
 
   
 
 * Linux:
-
-```./build.sh```
+```console
+./build.sh
+```

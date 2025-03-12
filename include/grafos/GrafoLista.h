@@ -3,15 +3,16 @@
 
 //------------------------------------------------------------
 
+#include "grafos/Aresta.h"
 #include "grafos/Grafo.h"
-#include "grafos/Vertice.h"
-#include "primitives/Pointer.h"
 #include <map>
 #include <list>
 
 //------------------------------------------------------------
 
 class Aresta;
+
+//------------------------------------------------------------
 
 class GrafoLista : public Grafo
 {

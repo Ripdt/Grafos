@@ -3,15 +3,10 @@
 
 //------------------------------------------------------------
 
+#include "grafos/Aresta.h"
 #include "grafos/Grafo.h"
-#include "grafos/Vertice.h"
+#include "primitives/Matrix.h"
 #include "primitives/Pointer.h"
-
-//------------------------------------------------------------
-
-template <typename T>
-class Matrix;
-class Aresta;
 
 //------------------------------------------------------------
 

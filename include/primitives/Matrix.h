@@ -53,6 +53,24 @@ public:
       return true;
     }
 
+    bool removeRow(const unsigned int row) {
+      if (row >= nRows()) {
+        return false;
+      }
+      m.erase(m.begin() + row);
+      return true;
+    }
+
+    bool removeColumn(const unsigned int column) {
+      if (column >= nColumns()) {
+        return false;
+      }
+      for (auto& row : m) {
+        row.erase(row.begin() + column);
+      }
+      return true;
+    }
+
     class ConstMatrixRow {
         const std::vector<Type>& row;
     public:

@@ -114,7 +114,7 @@ T& Pointer<T>::operator*() const
 
 template<typename T>
 inline bool Pointer<T>::operator==(
-    T* other
+  T* other
 )
 {
   return this.obj == other.obj;
@@ -124,7 +124,7 @@ inline bool Pointer<T>::operator==(
 
 template<typename T>
 inline void Pointer<T>::operator=(
-    Pointer<T>& other
+  Pointer<T>& other
 )
 {
   this->obj = other.obj;
@@ -145,7 +145,7 @@ void Pointer<T>::operator=(
 
     obj = _object;
     if (obj != nullptr) {
-      obj->IncrementNRef();
+      rc->add();
     }
   }
 }

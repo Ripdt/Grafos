@@ -13,7 +13,8 @@
 class GrafoMatriz : public Grafo
 {
 private:
-  Pointer<Matrix<Aresta*>> matriz;
+  std::vector<Vertice> vertices;
+  Matrix<Pointer<Aresta>> matriz;
   unsigned int numeroVerticesAdicionados = 0;
 
 public:

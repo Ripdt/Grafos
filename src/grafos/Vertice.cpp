@@ -13,6 +13,17 @@ Vertice::Vertice(
 
 //------------------------------------------------------------
 
+Vertice& Vertice::operator=(
+  const Vertice& other
+)
+{
+  indice = other.indice;
+  label = other.label;
+  return *this;
+}
+
+//------------------------------------------------------------
+
 int Vertice::getIndice() const
 {
   return indice;

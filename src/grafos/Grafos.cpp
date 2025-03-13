@@ -2,18 +2,19 @@
 #include "grafos/GrafoLista.h"
 #include "grafos/GrafoMatriz.h"
 
-using namespace std;
-
 void menuGrafo(const std::string& titulo, Grafo& grafo) {
     int op;
     do {
         std::cout << "\n--- " << titulo << " ---\n";
         std::cout << "1 - Adicionar vértice\n";
         std::cout << "2 - Remover vértice\n";
-        std::cout << "3 - Adicionar aresta\n";
-        std::cout << "4 - Remover aresta\n";
-        std::cout << "5 - Exibir grafo\n";
-        std::cout << "6 - Voltar\n";
+        std::cout << "3 - Consultar nome do vértice\n";
+        std::cout << "4 - Consultar vizinhos do vértice\n";
+        std::cout << "5 - Adicionar aresta\n";
+        std::cout << "6 - Remover aresta\n";
+        std::cout << "7 - Consultar aresta\n";
+        std::cout << "8 - Exibir grafo\n";
+        std::cout << "9 - Voltar\n";
         std::cout << "Escolha: ";
         std::cin >> op;
 
@@ -26,40 +27,64 @@ void menuGrafo(const std::string& titulo, Grafo& grafo) {
                 break;
             }
             case 2: {
-                int indice;
-                std::cout << "Digite o índice do vértice a ser removido: ";
-                std::cin >> indice;
-                grafo.removerVertice(indice);
-                break;
+              int indice;
+              std::cout << "Digite o índice do vértice a ser removido: ";
+              std::cin >> indice;
+              grafo.removerVertice(indice);
+              break;
             }
             case 3: {
+              int indice;
+              std::cout << "Digite o índice do vértice a ser consultado: ";
+              std::cin >> indice;
+              std::cout << "\t Nome: " << grafo.labelVertice(indice).c_str() << std::endl;
+              break;
+            }
+            case 4: {
+              int indice;
+              std::cout << "Digite o índice do vértice a ser consultado: ";
+              std::cin >> indice;
+              for (const Vertice& vertice : grafo.vizinhosVertice(indice)) {
+                std::cout << "\t Nome: " << vertice.getLabel().c_str() << std::endl;
+              }
+              std::cout << std::endl;
+              break;
+            }
+            case 5: {
                 int origem, destino, peso;
                 std::cout << "Digite o índice de origem, destino e o peso da aresta: ";
                 std::cin >> origem >> destino >> peso;
                 grafo.inserirAresta(origem, destino, peso);
                 break;
             }
-            case 4: {
-                int origem, destino;
-                std::cout << "Digite os índices de origem e destino da aresta a ser removida: ";
-                std::cin >> origem >> destino;
-                grafo.removerAresta(origem, destino);
-                break;
+            case 6: {
+              int origem, destino;
+              std::cout << "Digite os índices de origem e destino da aresta a ser removida: ";
+              std::cin >> origem >> destino;
+              grafo.removerAresta(origem, destino);
+              break;
             }
-            case 5:
+            case 7: {
+              int origem, destino;
+              std::cout << "Digite os índices de origem e destino da aresta a ser consultada: ";
+              std::cin >> origem >> destino;
+              std::cout << "\t Peso: " << grafo.pesoAresta(origem, destino) << std::endl;
+              break;
+            }
+            case 8:
                 grafo.imprime();
                 break;
-            case 6:
+            case 9:
                 std::cout << "Voltando...\n";
                 break;
             default:
                 std::cout << "Opção inválida! Tente novamente.\n";
         }
-    } while (op != 6);
+    } while (op != 9);
 }
 
 int main() {
-    int escolha, op;
+    int escolha = 0;
     GrafoLista grafoLista(false, false); // Grafo não direcionado e não ponderado
     GrafoMatriz grafoMatriz(false, false);
 

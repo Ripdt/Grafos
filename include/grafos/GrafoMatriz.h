@@ -14,8 +14,6 @@ class GrafoMatriz : public Grafo
 {
 private:
   Pointer<Matrix<Aresta*>> matriz;
-  unsigned int numeroVerticesAdicionados = 0;
-
 public:
   GrafoMatriz(
     const bool _ehDirecionado,

@@ -17,6 +17,9 @@ class Grafo
 private:
   const bool ehPonderado;
   const bool ehDirecionado;
+  
+protected:
+  unsigned int numeroVerticesAdicionados = 0;
 
 public:
   Grafo(

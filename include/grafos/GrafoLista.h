@@ -5,21 +5,21 @@
 
 #include "grafos/Aresta.h"
 #include "grafos/Grafo.h"
+#include "primitives/Pointer.h"
 #include <map>
 #include <list>
 
 //------------------------------------------------------------
 
-class Aresta;
+typedef std::pair<Pointer<Vertice>, std::list<Pointer<Aresta>>> ArestasPorVertice;
+typedef std::map<Pointer<Vertice>, std::list<Pointer<Aresta>>> ListaAdjacencia;
 
 //------------------------------------------------------------
 
 class GrafoLista : public Grafo
 {
 private:
-  std::map<int, std::list<Aresta>> listaAdjacencia;
-  unsigned int numeroVerticesAdicionados = 0;
-
+  ListaAdjacencia listaAdjacencia;
 public:
   GrafoLista(
     const bool _ehDirecionado,

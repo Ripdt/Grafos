@@ -1,10 +1,10 @@
-#include "Aresta.h"
+#include "grafos/Aresta.h"
 
 //------------------------------------------------------------
 
 Aresta::Aresta(
-  const Vertice& _origem, 
-  const Vertice& _destino, 
+  const Vertice* _origem, 
+  const Vertice* _destino, 
   const int _peso
 ) :
   origem(_origem),
@@ -15,14 +15,14 @@ Aresta::Aresta(
 
 //------------------------------------------------------------
 
-const Vertice& Aresta::getOrigem() const
+const Vertice* Aresta::getOrigem() const
 {
   return origem;
 }
 
 //------------------------------------------------------------
 
-const Vertice& Aresta::getDestino() const
+const Vertice* Aresta::getDestino() const
 {
   return destino;
 }

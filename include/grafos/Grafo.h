@@ -14,7 +14,7 @@ class Vertice;
 
 class Grafo
 {
-private:
+protected:
   const bool ehPonderado;
   const bool ehDirecionado;
   

@@ -6,8 +6,8 @@
 class Vertice
 {
 private:
-  const int indice;
-  const std::string label;
+  int indice;
+  std::string label;
 
 public:
   Vertice(
@@ -16,6 +16,8 @@ public:
   );
 
   virtual ~Vertice() = default;
+
+  Vertice& operator=(const Vertice& other);
 
   int getIndice() const;
 

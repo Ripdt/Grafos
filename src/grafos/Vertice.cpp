@@ -13,6 +13,24 @@ Vertice::Vertice(
 
 //------------------------------------------------------------
 
+bool Vertice::operator<(
+  const Vertice& other
+  ) const
+{
+  return indice < other.indice || indice == other.indice && label < other.label;
+}
+
+//------------------------------------------------------------
+
+bool Vertice::operator==(
+  const Vertice& other
+  ) const
+{
+  return indice == other.indice && label == other.label;
+}
+
+//------------------------------------------------------------
+
 Vertice& Vertice::operator=(
   const Vertice& other
 )

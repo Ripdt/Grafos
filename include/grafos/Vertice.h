@@ -17,6 +17,9 @@ public:
 
   virtual ~Vertice() = default;
 
+  bool operator<(const Vertice& other) const;
+  bool operator==(const Vertice& other) const;
+
   Vertice& operator=(const Vertice& other);
 
   int getIndice() const;

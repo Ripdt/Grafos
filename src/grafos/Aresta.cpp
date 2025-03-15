@@ -19,7 +19,7 @@ bool Aresta::operator==(
   const Aresta& aresta
   ) const
 {
-  return origem == aresta.getOrigem() && destino == aresta.getDestino();
+  return origem == aresta.getOrigem() && destino == aresta.getDestino() && peso == aresta.getPeso();
 }
 
 //------------------------------------------------------------
@@ -28,8 +28,8 @@ bool Aresta::operator<(
   const Aresta& aresta
   ) const
 {
-  return destino->getIndice() < aresta.getDestino()->getIndice() && 
-         origem->getIndice() < aresta.getOrigem()->getIndice();
+  return origem->getIndice() < aresta.getOrigem()->getIndice() &&
+         destino->getIndice() < aresta.getDestino()->getIndice();
 }
 
 //------------------------------------------------------------

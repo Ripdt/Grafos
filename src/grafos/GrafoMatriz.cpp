@@ -4,6 +4,7 @@
 #include "primitives/Matrix.h"
 
 #include <iostream>
+#include <set>
 
 //------------------------------------------------------------
 
@@ -14,7 +15,7 @@ GrafoMatriz::GrafoMatriz(
   Grafo(_ehDirecionado, _ehPonderado),
   matriz(1, 1)
 {
-}
+} 
 
 //------------------------------------------------------------
 
@@ -96,7 +97,8 @@ bool GrafoMatriz::inserirAresta(
   matriz[origem][destino] = aresta;
 
   if (!ehDirecionado) {
-    matriz[destino][origem] = aresta;
+    auto arestaInversa = new Aresta(&vertices.at(destino), &vertices.at(origem), peso);
+    matriz[destino][origem] = arestaInversa;
   }
 
   return true;
@@ -113,7 +115,7 @@ bool GrafoMatriz::removerAresta(
   if (!ehDirecionado) {
     matriz[destino][origem] = nullptr;
   }
-  return false;
+  return true;
 }
 
 //------------------------------------------------------------
@@ -142,18 +144,23 @@ std::vector<Vertice> GrafoMatriz::vizinhosVertice(
   const int indice
 )
 {
-  std::vector<Vertice> vizinhos;
+  std::set<Vertice> vizinhos;
   for (int i = 0; i < matriz.nRows(); i++) {
     if (matriz[i][indice] != nullptr) {
-      vizinhos.push_back(*matriz[i][indice]->getOrigem());
+      vizinhos.insert(*matriz[i][indice]->getOrigem());
     }
   }
-  for (int j = 0; j < matriz.nRows(); j++) {
+  for (int j = 0; j < matriz.nColumns(); j++) {
     if (matriz[indice][j] != nullptr) {
-      vizinhos.push_back(*matriz[indice][j]->getOrigem());
+      vizinhos.insert(*matriz[indice][j]->getDestino());
     }
   }
-  return vizinhos;
+
+  std::vector<Vertice> vizinhosVector;
+  for (const Vertice& vertice : vizinhos) {
+    vizinhosVector.push_back(vertice);
+  }
+  return vizinhosVector;
 }
 
 //------------------------------------------------------------

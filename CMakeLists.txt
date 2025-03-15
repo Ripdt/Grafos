@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.14)
 project(GrafosProjeto)
 
+# Habilita os testes logo no início
+include(CTest)
+enable_testing()
+
 # Define o padrão de compilação para C++14
 set(CMAKE_CXX_STANDARD 14)
 
@@ -24,3 +28,6 @@ target_link_libraries(GrafosProjeto primitives grafos)
 
 # Define o projeto principal como projeto de inicialização
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT GrafosProjeto)
+
+# Adiciona os testes
+add_subdirectory(tests)

@@ -22,6 +22,14 @@ public:
     const int _peso
   );
 
+  bool operator==(
+    const Aresta& aresta
+  ) const;
+
+  bool operator<(
+    const Aresta& aresta
+  ) const;
+
   virtual ~Aresta() = default;
 
   const Vertice* getOrigem() const;

@@ -11,14 +11,17 @@ public:
   Pointer(const T& src);
   ~Pointer();
 
-  void operator=(Pointer<T>& other);
+  void operator=(const Pointer<T>& other);
   void operator=(T* other);
+
+  bool operator==(T* other);
+  bool operator<(const Pointer& other) const;
+
+  operator T* () const;
 
   T* operator->() const;
   T* getRaw() const;
   T& operator*() const;
-
-  bool operator==(T* other);
 private:
 
   class ReferenceCounter
@@ -117,14 +120,21 @@ inline bool Pointer<T>::operator==(
   T* other
 )
 {
-  return this.obj == other.obj;
+  return this->obj == other;
+}
+
+//-----------------------------------------------------------------------------------
+
+template<typename T>
+bool Pointer<T>::operator<(const Pointer<T>& other) const {
+  return this->obj < other.obj;
 }
 
 //-----------------------------------------------------------------------------------
 
 template<typename T>
 inline void Pointer<T>::operator=(
-  Pointer<T>& other
+  const Pointer<T>& other
 )
 {
   this->obj = other.obj;
@@ -148,6 +158,14 @@ void Pointer<T>::operator=(
       rc->add();
     }
   }
+}
+
+//----------------------------------------------------------------------------------------------
+
+template <class T> 
+inline Pointer<T>::operator T* () const
+{
+  return static_cast<T*>(obj);
 }
 
 //-----------------------------------------------------------------------------------

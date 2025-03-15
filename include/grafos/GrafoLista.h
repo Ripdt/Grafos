@@ -7,12 +7,13 @@
 #include "grafos/Grafo.h"
 #include "primitives/Pointer.h"
 #include <map>
-#include <list>
+#include <set>
 
 //------------------------------------------------------------
 
-typedef std::pair<Pointer<Vertice>, std::list<Pointer<Aresta>>> ArestasPorVertice;
-typedef std::map<Pointer<Vertice>, std::list<Pointer<Aresta>>> ListaAdjacencia;
+typedef std::set<Aresta> ListaArestas;
+typedef std::pair<Pointer<Vertice>, ListaArestas> ArestasPorVertice;
+typedef std::map<Pointer<Vertice>, ListaArestas> ListaAdjacencia;
 
 //------------------------------------------------------------
 
@@ -65,6 +66,16 @@ public:
 
   std::vector<Vertice> vizinhosVertice(
     const int indice
+  );
+
+private:
+  const Pointer<Vertice>& buscaVertice(
+    const int indice
+  ) const;
+
+  const Aresta* buscaAresta(
+    const Pointer<Vertice>& origem,
+    const int destino
   );
 };
 

@@ -65,7 +65,7 @@ void GrafoMatriz::imprime()
   for (unsigned i = 0; i < matriz.nRows(); i++) {
     std::cout << vertices.at(i).getLabel();
     for (unsigned j = 0; j < matriz.nColumns(); j++) {
-      if (matriz[i][j].getRaw() == nullptr) {
+      if (matriz[i][j] == nullptr) {
         std::cout << "\t0";
       }
       else {
@@ -123,7 +123,7 @@ bool GrafoMatriz::existeAresta(
   const int destino
 )
 {
-  return matriz[origem][destino].getRaw() != nullptr;
+  return matriz[origem][destino] != nullptr;
 }
 
 //------------------------------------------------------------
@@ -144,12 +144,12 @@ std::vector<Vertice> GrafoMatriz::vizinhosVertice(
 {
   std::vector<Vertice> vizinhos;
   for (int i = 0; i < matriz.nRows(); i++) {
-    if (matriz[i][indice].getRaw() != nullptr) {
+    if (matriz[i][indice] != nullptr) {
       vizinhos.push_back(*matriz[i][indice]->getOrigem());
     }
   }
   for (int j = 0; j < matriz.nRows(); j++) {
-    if (matriz[indice][j].getRaw() != nullptr) {
+    if (matriz[indice][j] != nullptr) {
       vizinhos.push_back(*matriz[indice][j]->getOrigem());
     }
   }

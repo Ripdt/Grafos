@@ -21,7 +21,7 @@ bool GrafoLista::inserirVertice(
   const std::string label
 )
 {
-  ArestasPorVertice p(new Vertice(numeroVerticesAdicionados, label), std::list<Pointer<Aresta>>());
+  ArestasPorVertice p(new Vertice(numeroVerticesAdicionados, label), ListaArestas());
   listaAdjacencia.insert(p);
   numeroVerticesAdicionados++;
   return true;
@@ -33,17 +33,21 @@ bool GrafoLista::removerVertice(
   const int indice
 )
 {
-  std::remove_if(listaAdjacencia.begin(), listaAdjacencia.end(), [&indice](const ArestasPorVertice& arestasPVertice) {
-    const Vertice* vertice = arestasPVertice.first.getRaw();
-    return vertice->getIndice() == indice;
-  });
+  //auto it = std::remove_if(listaAdjacencia.begin(), listaAdjacencia.end(), [&indice](const ArestasPorVertice& arestasPVertice) {
+  //  const Vertice* vertice = arestasPVertice.first.getRaw();
+  //  return vertice->getIndice() == indice;
+  //});
 
-  for (auto& pair : listaAdjacencia) {
-    std::list<Pointer<Aresta>>& lista = pair.second;
-    std::remove_if(lista.begin(), lista.end(), [&indice](const Pointer<Aresta>& a) {
-      return a->getDestino()->getIndice() == indice;
-    });
-  }
+  //listaAdjacencia.erase(it, listaAdjacencia.end());
+
+  //for (auto& pair : listaAdjacencia) {
+  //  ListaArestas& lista = pair.second;
+
+  //  auto it = std::remove_if(lista.begin(), lista.end(), [&indice](const Pointer<Aresta>& a) {
+  //    return a->getDestino()->getIndice() == indice;
+  //    });
+  //  lista.erase(it, lista.end());
+  //}
 
   return true;
 }
@@ -55,7 +59,7 @@ std::string GrafoLista::labelVertice(
 )
 {
   for (auto& pair : listaAdjacencia) {
-    const Vertice* vertice = pair.first.getRaw();
+    const Vertice* vertice = pair.first;
     if (vertice->getIndice() == indice)
       return vertice->getLabel();
   }
@@ -68,11 +72,12 @@ std::string GrafoLista::labelVertice(
 void GrafoLista::imprime()
 {
   for (auto& pair : listaAdjacencia) {
-    const Vertice* vertice = pair.first.getRaw();
-    std::cout << "\tVertice: " << vertice->getIndice() << " - " << vertice->getLabel().c_str() << std::endl;
+    const Vertice* vertice = pair.first;
+    std::cout << "\tVertice " << vertice->getIndice() << " - " << vertice->getLabel().c_str() << ": ";
     for (const Pointer<Aresta>& aresta : pair.second) {
-      std::cout << "\t\t" << aresta->getDestino()->getIndice() << " - " << aresta->getDestino()->getLabel().c_str() << std::endl;
+      std::cout << aresta->getDestino()->getIndice() << " - " << aresta->getDestino()->getLabel().c_str() << " - " << aresta->getPeso() << "; ";
     }
+    std::cout << std::endl;
   }
   std::cout << std::endl;
 }
@@ -85,24 +90,34 @@ bool GrafoLista::inserirAresta(
   const int peso
 )
 {
-  Vertice* verticeOrigem = nullptr, *verticeDestino = nullptr;
-  for (auto& pair : listaAdjacencia) {
-    verticeOrigem  = verticeOrigem == nullptr && pair.first->getIndice() == origem ? pair.first.getRaw() : nullptr;
-    verticeDestino = verticeDestino == nullptr && pair.first->getIndice() == origem ? pair.first.getRaw() : nullptr;
-    if (verticeOrigem != nullptr && verticeDestino != nullptr)
-      break;
-  }
+  const Pointer<Vertice>& verticeOrigem = buscaVertice(origem), verticeDestino = buscaVertice(destino);
 
   if (verticeDestino == nullptr || verticeOrigem == nullptr)
     return false;
 
   const int pesoAresta = ehPonderado ? peso : 1;
-  listaAdjacencia[verticeOrigem].push_back(new Aresta(verticeOrigem, verticeDestino, pesoAresta));
+
+  Aresta aresta(verticeOrigem, verticeDestino, pesoAresta);
+  listaAdjacencia[verticeOrigem].insert(aresta);
+
   if (!ehDirecionado) {
-    listaAdjacencia[verticeDestino].push_back(new Aresta(verticeDestino, verticeOrigem, pesoAresta));
+    Aresta arestaInvertida(verticeDestino, verticeOrigem, pesoAresta);
+    listaAdjacencia[verticeDestino].insert(arestaInvertida);
   }
 
   return true;
+}
+
+//------------------------------------------------------------
+
+const Pointer<Vertice>& GrafoLista::buscaVertice(
+  const int indice
+) const
+{
+  for (auto& pair : listaAdjacencia) {
+    if (pair.first->getIndice() == indice)
+      return pair.first;
+  }
 }
 
 //------------------------------------------------------------
@@ -112,7 +127,35 @@ bool GrafoLista::removerAresta(
   const int destino
 )
 {
-  return false;
+  const Pointer<Vertice>& verticeOrigem = buscaVertice(origem);
+  if (verticeOrigem == nullptr)
+    return false;
+
+  listaAdjacencia[verticeOrigem].erase(*buscaAresta(verticeOrigem, destino));
+
+  if (!ehDirecionado) {
+    const Pointer<Vertice>& verticeDestino = buscaVertice(destino);
+    if (verticeDestino != nullptr)
+      listaAdjacencia[verticeDestino].erase(*buscaAresta(verticeDestino, origem));
+  }
+
+  return true;
+}
+
+//------------------------------------------------------------
+
+const Aresta* GrafoLista::buscaAresta(
+  const Pointer<Vertice>& origem,
+  const int destino
+)
+{
+  for (const Aresta& aresta : listaAdjacencia[origem]) {
+    if (aresta.getDestino()->getIndice() == destino) {
+      return &aresta;
+    }
+  }
+
+  return nullptr;
 }
 
 //------------------------------------------------------------
@@ -122,7 +165,7 @@ bool GrafoLista::existeAresta(
   const int destino
 )
 {
-  return false;
+  return buscaAresta(buscaVertice(origem), destino) != nullptr;
 }
 
 //------------------------------------------------------------
@@ -132,7 +175,8 @@ int GrafoLista::pesoAresta(
   const int destino
 )
 {
-  return 0;
+  const Aresta* aresta = buscaAresta(buscaVertice(origem), destino);
+  return aresta != nullptr ? aresta->getPeso() : 0;
 }
 
 //------------------------------------------------------------
@@ -141,6 +185,7 @@ std::vector<Vertice> GrafoLista::vizinhosVertice(
   const int indice
 )
 {
+  //Vertice* buscaVertice(indice);
   return std::vector<Vertice>();
 }
 

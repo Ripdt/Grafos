@@ -15,6 +15,25 @@ Aresta::Aresta(
 
 //------------------------------------------------------------
 
+bool Aresta::operator==(
+  const Aresta& aresta
+  ) const
+{
+  return origem == aresta.getOrigem() && destino == aresta.getDestino();
+}
+
+//------------------------------------------------------------
+
+bool Aresta::operator<(
+  const Aresta& aresta
+  ) const
+{
+  return destino->getIndice() < aresta.getDestino()->getIndice() && 
+         origem->getIndice() < aresta.getOrigem()->getIndice();
+}
+
+//------------------------------------------------------------
+
 const Vertice* Aresta::getOrigem() const
 {
   return origem;

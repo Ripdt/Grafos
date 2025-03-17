@@ -49,6 +49,33 @@ bool GrafoLista::removerVertice(
   //  lista.erase(it, lista.end());
   //}
 
+//  --- Possibilidade de imp ---
+
+//   bool GrafoLista::removerVertice(const int indice) {
+//     // Remover o vértice da lista de adjacência
+//     auto it = std::find_if(listaAdjacencia.begin(), listaAdjacencia.end(),
+//         [&indice](const auto& par) {
+//             return par.first->getIndice() == indice;
+//         });
+
+//     if (it != listaAdjacencia.end()) {
+//         listaAdjacencia.erase(it);  // Remove o vértice do mapa
+//     }
+
+//     // Remover todas as arestas que têm o vértice como destino
+//     for (auto& [_, lista] : listaAdjacencia) {
+//         lista.erase(
+//             std::remove_if(lista.begin(), lista.end(),
+//                 [&indice](const Pointer<Aresta>& aresta) {
+//                     return aresta->getDestino()->getIndice() == indice;
+//                 }),
+//             lista.end()
+//         );
+//     }
+
+//     return true;
+// }
+
   return true;
 }
 

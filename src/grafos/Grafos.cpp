@@ -1,9 +1,12 @@
 #include <iostream>
+
+#include <locale>
+
 #include "grafos/GrafoLista.h"
 #include "grafos/GrafoMatriz.h"
 
-const std::string TÍTULO_GRAFO_LISTA = "Grafo Lista de Adjacência";
-const std::string TÍTULO_GRAFO_MATRIZ = "Grafo Matriz de Adjacência";
+const std::string TITULO_GRAFO_LISTA = "Grafo Lista de Adjacência";
+const std::string TITULO_GRAFO_MATRIZ = "Grafo Matriz de Adjacência";
 
 void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
     int op;
@@ -87,61 +90,48 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
 }
 
 int main() {
-    int escolha = 0;
-    bool direcionado = false, ponderado = false;
+  setlocale(LC_ALL, "pt_BR.UTF-8");
 
-    std::cout << "\n===== CONFIGURAÇÃO DO GRAFO =====\n";
+  int escolha = 0;
+
+  std::cout << "\n===== CONFIGURAÇÃO DO GRAFO =====\n";
     
-    std::cout << "Escolha o tipo de grafo:\n";
-    std::cout << "1 - Direcionado\n";
-    std::cout << "2 - Ponderado\n";
-    std::cout << "3 - Ambos (Direcionado e Ponderado)\n";
-    std::cout << "Escolha: ";
-    std::cin >> escolha;
+  std::cout << "Escolha o tipo de grafo:\n";
 
-    switch (escolha) {
-        case 1:
-            direcionado = true;
-            ponderado = false;
-            break;
-        case 2:
-            direcionado = false;
-            ponderado = true;
-            break;
-        case 3:
-            direcionado = true;
-            ponderado = true;
-            break;
-        default:
-            std::cout << "Opção inválida! Programa encerrado.\n";
-            exit(1);
-    }
+  std::string direcionado, ponderado;
+  std::cout << "\tDirecionado (S/N)? ";
+  std::cin >> direcionado;
+  std::cout << "\tPonderado (S/N)? ";
+  std::cin >> ponderado;
+
+  const bool ehDirecionado = direcionado == "S";
+  const bool ehPonderado = ponderado == "S";
     
-    GrafoLista grafoLista(direcionado, ponderado);
-    GrafoMatriz grafoMatriz(direcionado, ponderado);
+  GrafoLista grafoLista(ehDirecionado, ehPonderado);
+  GrafoMatriz grafoMatriz(ehDirecionado, ehPonderado);
 
-    do {
-        std::cout << "\n===== MENU PRINCIPAL =====\n";
-        std::cout << "1 - Usar Lista de Adjacência\n";
-        std::cout << "2 - Usar Matriz de Adjacência\n";
-        std::cout << "3 - Sair\n";
-        std::cout << "Escolha uma opção: ";
-        std::cin >> escolha;
+  do {
+      std::cout << "\n===== MENU PRINCIPAL =====\n";
+      std::cout << "1 - Usar Lista de Adjacência\n";
+      std::cout << "2 - Usar Matriz de Adjacência\n";
+      std::cout << "3 - Sair\n";
+      std::cout << "Escolha uma opção: ";
+      std::cin >> escolha;
 
-        switch (escolha) {
-            case 1:
-                menuGrafo(grafoLista, TÍTULO_GRAFO_LISTA);
-                break;
-            case 2:
-                menuGrafo(grafoMatriz, TÍTULO_GRAFO_MATRIZ);
-                break;
-            case 3:
-                std::cout << "Saindo do programa...\n";
-                break;
-            default:
-                std::cout << "Opção inválida! Tente novamente.\n";
-        }
-    } while (escolha != 3);
+      switch (escolha) {
+          case 1:
+              menuGrafo(grafoLista, TITULO_GRAFO_LISTA);
+              break;
+          case 2:
+              menuGrafo(grafoMatriz, TITULO_GRAFO_MATRIZ);
+              break;
+          case 3:
+              std::cout << "Saindo do programa...\n";
+              break;
+          default:
+              std::cout << "Opção inválida! Tente novamente.\n";
+      }
+  } while (escolha != 3);
 
-    return 0;
+  return 0;
 }

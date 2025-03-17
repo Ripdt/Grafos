@@ -2,10 +2,13 @@
 #include "grafos/GrafoLista.h"
 #include "grafos/GrafoMatriz.h"
 
-void menuGrafo(const std::string& titulo, Grafo& grafo) {
+const std::string TÍTULO_GRAFO_LISTA = "Grafo Lista de Adjacência";
+const std::string TÍTULO_GRAFO_MATRIZ = "Grafo Matriz de Adjacência";
+
+void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
     int op;
     do {
-        std::cout << "\n--- " << titulo << " ---\n";
+        std::cout << "\n--- " << tituloGrafo << " ---\n";
         std::cout << "1 - Adicionar vértice\n";
         std::cout << "2 - Remover vértice\n";
         std::cout << "3 - Consultar nome do vértice\n";
@@ -27,28 +30,28 @@ void menuGrafo(const std::string& titulo, Grafo& grafo) {
                 break;
             }
             case 2: {
-              int indice;
-              std::cout << "Digite o índice do vértice a ser removido: ";
-              std::cin >> indice;
-              grafo.removerVertice(indice);
-              break;
+                int indice;
+                std::cout << "Digite o índice do vértice a ser removido: ";
+                std::cin >> indice;
+                grafo.removerVertice(indice);
+                break;
             }
             case 3: {
-              int indice;
-              std::cout << "Digite o índice do vértice a ser consultado: ";
-              std::cin >> indice;
-              std::cout << "\t Nome: " << grafo.labelVertice(indice).c_str() << std::endl;
-              break;
+                int indice;
+                std::cout << "Digite o índice do vértice a ser consultado: ";
+                std::cin >> indice;
+                std::cout << "\t Nome: " << grafo.labelVertice(indice) << std::endl;
+                break;
             }
             case 4: {
-              int indice;
-              std::cout << "Digite o índice do vértice a ser consultado: ";
-              std::cin >> indice;
-              for (const Vertice& vertice : grafo.vizinhosVertice(indice)) {
-                std::cout << "\t Nome: " << vertice.getLabel().c_str() << std::endl;
-              }
-              std::cout << std::endl;
-              break;
+                int indice;
+                std::cout << "Digite o índice do vértice a ser consultado: ";
+                std::cin >> indice;
+                for (const Vertice& vertice : grafo.vizinhosVertice(indice)) {
+                    std::cout << "\t Nome: " << vertice.getLabel() << std::endl;
+                }
+                std::cout << std::endl;
+                break;
             }
             case 5: {
                 int origem, destino, peso;
@@ -58,18 +61,18 @@ void menuGrafo(const std::string& titulo, Grafo& grafo) {
                 break;
             }
             case 6: {
-              int origem, destino;
-              std::cout << "Digite os índices de origem e destino da aresta a ser removida: ";
-              std::cin >> origem >> destino;
-              grafo.removerAresta(origem, destino);
-              break;
+                int origem, destino;
+                std::cout << "Digite os índices de origem e destino da aresta a ser removida: ";
+                std::cin >> origem >> destino;
+                grafo.removerAresta(origem, destino);
+                break;
             }
             case 7: {
-              int origem, destino;
-              std::cout << "Digite os índices de origem e destino da aresta a ser consultada: ";
-              std::cin >> origem >> destino;
-              std::cout << "\t Peso: " << grafo.pesoAresta(origem, destino) << std::endl;
-              break;
+                int origem, destino;
+                std::cout << "Digite os índices de origem e destino da aresta a ser consultada: ";
+                std::cin >> origem >> destino;
+                std::cout << "\t Peso: " << grafo.pesoAresta(origem, destino) << std::endl;
+                break;
             }
             case 8:
                 grafo.imprime();
@@ -85,8 +88,32 @@ void menuGrafo(const std::string& titulo, Grafo& grafo) {
 
 int main() {
     int escolha = 0;
-    GrafoLista grafoLista(false, false); // Grafo não direcionado e não ponderado
-    GrafoMatriz grafoMatriz(false, false);
+    bool direcionado = false, ponderado = false;
+
+    std::cout << "\n===== CONFIGURAÇÃO DO GRAFO =====\n";
+    
+    std::cout << "Escolha o tipo de grafo:\n";
+    std::cout << "1 - Direcionado\n";
+    std::cout << "2 - Ponderado\n";
+    std::cout << "Escolha: ";
+    std::cin >> escolha;
+
+    switch (escolha) {
+        case 1:
+            direcionado = true;
+            ponderado = false;
+            break;
+        case 2:
+            direcionado = false;
+            ponderado = true;
+            break;
+        default:
+            std::cout << "Opção inválida! Programa encerrado.\n";
+            exit(1);
+    }
+
+    GrafoLista grafoLista(direcionado, ponderado);
+    GrafoMatriz grafoMatriz(direcionado, ponderado);
 
     do {
         std::cout << "\n===== MENU PRINCIPAL =====\n";
@@ -98,10 +125,10 @@ int main() {
 
         switch (escolha) {
             case 1:
-                menuGrafo("Lista de Adjacência", grafoLista);
+                menuGrafo(grafoLista, TÍTULO_GRAFO_LISTA);
                 break;
             case 2:
-                menuGrafo("Matriz de Adjacência", grafoMatriz);
+                menuGrafo(grafoMatriz, TÍTULO_GRAFO_MATRIZ);
                 break;
             case 3:
                 std::cout << "Saindo do programa...\n";

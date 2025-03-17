@@ -142,9 +142,10 @@ const Pointer<Vertice>& GrafoLista::buscaVertice(
 ) const
 {
   for (auto& pair : listaAdjacencia) {
-    if (pair.first->getIndice() == indice)
+    if (pair.first->getIndice() == indice) 
       return pair.first;
   }
+  return nullptr;
 }
 
 //------------------------------------------------------------

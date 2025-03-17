@@ -8,6 +8,12 @@
 const std::string TITULO_GRAFO_LISTA = "Grafo Lista de Adjacência";
 const std::string TITULO_GRAFO_MATRIZ = "Grafo Matriz de Adjacência";
 
+template <typename T>
+struct FeedbackArgs {
+    const T item;
+    const std::string action;
+};
+
 void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
     int op;
     do {
@@ -26,24 +32,25 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
 
         switch (op) {
             case 1: {
-                std::string label;
+                std::string input;
                 std::cout << "Digite o rótulo do vértice: ";
-                std::cin >> label;
-                grafo.inserirVertice(label);
+                std::cin >> input;
+
+
+                const bool response = grafo.inserirVertice(input);;
+
+                makeFeedbackResponse<std::string>(response, { input, action: "ADICAO" });
+
                 break;
             }
             case 2: {
-                int indice;
+                int input;
                 std::cout << "Digite o índice do vértice a ser removido: ";
-                std::cin >> indice;
-                grafo.removerVertice(indice);
-                break;
-            }
-            case 3: {
-                int indice;
-                std::cout << "Digite o índice do vértice a ser consultado: ";
-                std::cin >> indice;
-                std::cout << "\t Nome: " << grafo.labelVertice(indice) << std::endl;
+                std::cin >> input;
+
+                const bool response = grafo.removerVertice(input);
+
+                makeFeedbackResponse<int>(response, { input, action: "REMOCAO" });
                 break;
             }
             case 4: {
@@ -60,21 +67,20 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
                 int origem, destino, peso;
                 std::cout << "Digite o índice de origem, destino e o peso da aresta: ";
                 std::cin >> origem >> destino >> peso;
-                grafo.inserirAresta(origem, destino, peso);
+
+                const bool response = grafo.inserirAresta(origem, destino, peso);
+                makeFeedbackResponse<std::string>(response, { item: origem + " - " + destino, action: "INSERCAO" });
+
                 break;
             }
             case 6: {
                 int origem, destino;
                 std::cout << "Digite os índices de origem e destino da aresta a ser removida: ";
                 std::cin >> origem >> destino;
-                grafo.removerAresta(origem, destino);
-                break;
-            }
-            case 7: {
-                int origem, destino;
-                std::cout << "Digite os índices de origem e destino da aresta a ser consultada: ";
-                std::cin >> origem >> destino;
-                std::cout << "\t Peso: " << grafo.pesoAresta(origem, destino) << std::endl;
+
+                const bool response = grafo.removerAresta(origem, destino);
+                makeFeedbackResponse<std::string>(response, { item: origem + " - " + destino, action: "REMOCAO" });
+
                 break;
             }
             case 8:
@@ -87,6 +93,21 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
                 std::cout << "Opção inválida! Tente novamente.\n";
         }
     } while (op != 9);
+}
+
+template <typename T>
+void makeFeedbackResponse(const bool response, const FeedbackArgs<T> &args) {
+    if (!response) {
+        std::cout << "\n[ERRO] Ocorreu um erro durante a operação! Tente novamente.\n";
+        return;
+    }
+
+    std::cout << "\n=======================================\n"
+              << "            RESULTADOS\n"
+              << "=======================================\n"
+              << " Item: " << args.item << "\n"
+              << " Ação: " << args.action << "\n"
+              << "=======================================\n";
 }
 
 int main() {

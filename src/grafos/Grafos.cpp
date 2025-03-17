@@ -95,6 +95,7 @@ int main() {
     std::cout << "Escolha o tipo de grafo:\n";
     std::cout << "1 - Direcionado\n";
     std::cout << "2 - Ponderado\n";
+    std::cout << "3 - Ambos (Direcionado e Ponderado)\n";
     std::cout << "Escolha: ";
     std::cin >> escolha;
 
@@ -107,11 +108,15 @@ int main() {
             direcionado = false;
             ponderado = true;
             break;
+        case 3:
+            direcionado = true;
+            ponderado = true;
+            break;
         default:
             std::cout << "Opção inválida! Programa encerrado.\n";
             exit(1);
     }
-
+    
     GrafoLista grafoLista(direcionado, ponderado);
     GrafoMatriz grafoMatriz(direcionado, ponderado);
 

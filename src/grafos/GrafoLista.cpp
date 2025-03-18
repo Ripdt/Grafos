@@ -218,3 +218,90 @@ std::vector<Vertice> GrafoLista::vizinhosVertice(
 }
 
 //------------------------------------------------------------
+
+bool GrafoLista::removerAresta(
+  const int origem, 
+  const int destino
+) {
+  const Pointer<Vertice>& verticeOrigem = buscaVertice(origem);
+  if (!verticeOrigem) return false;
+
+  auto& listaOrigem = listaAdjacencia[verticeOrigem];
+  listaOrigem.erase(
+    std::remove_if(listaOrigem.begin(), listaOrigem.end(),
+      [&destino](const Pointer<Aresta>& aresta) {
+        return aresta->getDestino()->getIndice() == destino;
+      }),
+    listaOrigem.end()
+  );
+
+  if (!ehDirecionado) {
+    const Pointer<Vertice>& verticeDestino = buscaVertice(destino);
+    if (verticeDestino) {
+      auto& listaDestino = listaAdjacencia[verticeDestino];
+      listaDestino.erase(
+        std::remove_if(listaDestino.begin(), listaDestino.end(),
+          [&origem](const Pointer<Aresta>& aresta) {
+            return aresta->getDestino()->getIndice() == origem;
+          }),
+        listaDestino.end()
+      );
+    }
+  }
+  
+  return true;
+}
+
+//------------------------------------------------------------
+
+bool GrafoLista::removerAresta(
+  const int origem, 
+  const int destino
+) {
+  const Pointer<Vertice>& verticeOrigem = buscaVertice(origem);
+  if (!verticeOrigem) return false;
+
+  auto& listaOrigem = listaAdjacencia[verticeOrigem];
+  listaOrigem.erase(
+    std::remove_if(listaOrigem.begin(), listaOrigem.end(),
+      [&destino](const Pointer<Aresta>& aresta) {
+        return aresta->getDestino()->getIndice() == destino;
+      }),
+    listaOrigem.end()
+  );
+
+  if (!ehDirecionado) {
+    const Pointer<Vertice>& verticeDestino = buscaVertice(destino);
+    if (verticeDestino) {
+      auto& listaDestino = listaAdjacencia[verticeDestino];
+      listaDestino.erase(
+        std::remove_if(listaDestino.begin(), listaDestino.end(),
+          [&origem](const Pointer<Aresta>& aresta) {
+            return aresta->getDestino()->getIndice() == origem;
+          }),
+        listaDestino.end()
+      );
+    }
+  }
+  
+  return true;
+}
+
+//------------------------------------------------------------
+
+void GrafoLista::imprime() {
+  std::cout << "Grafo:" << std::endl;
+  for (const auto& pair : listaAdjacencia) {
+    const Vertice* vertice = pair.first;
+    std::cout << "Vertice " << vertice->getIndice() << " (" << vertice->getLabel() << ") -> ";
+    
+    for (const Pointer<Aresta>& aresta : pair.second) {
+      std::cout << "[ " << aresta->getDestino()->getIndice() << " (" << aresta->getDestino()->getLabel() ")";
+      if (ehPonderado) {
+        std::cout << " - Peso: " << aresta->getPeso();
+      }
+      std::cout << " ] ";
+    }
+    std::cout << std::endl;
+  }
+}

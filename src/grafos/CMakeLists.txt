@@ -11,3 +11,10 @@ set_target_properties(grafos PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build
 )
+
+set_property(
+  TARGET
+  grafos
+  APPEND PROPERTY
+  FOLDER "projects"
+)

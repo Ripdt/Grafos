@@ -33,3 +33,9 @@
 
 /build
 /Testing
+/out
+/.vs
+/bin
+/.vscode
+CMakeSettings.json
+.vscode/settings.json

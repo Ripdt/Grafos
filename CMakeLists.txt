@@ -12,9 +12,12 @@ set(CMAKE_CXX_STANDARD 14)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
 # Define os diretórios de saída para build/
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+
+# Permite usar diretórios para organizar os projetos
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Adiciona subdiretórios contendo bibliotecas
 add_subdirectory(src/primitives)

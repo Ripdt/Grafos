@@ -31,6 +31,34 @@ target_include_directories(PrimitivesTests PRIVATE ${CMAKE_SOURCE_DIR}/tests/pri
 target_link_libraries(GrafosTests PRIVATE grafos gtest gtest_main)
 target_link_libraries(PrimitivesTests PRIVATE primitives gtest gtest_main)
 
+set_property(
+  TARGET
+  GrafosTests
+  APPEND PROPERTY
+  FOLDER "tests"
+)
+
+set_property(
+  TARGET
+  PrimitivesTests
+  APPEND PROPERTY
+  FOLDER "tests"
+)
+
+set_property(
+  TARGET
+  gtest
+  APPEND PROPERTY
+  FOLDER "tests/google"
+)
+
+set_property(
+  TARGET
+  gtest_main
+  APPEND PROPERTY
+  FOLDER "tests/google"
+)
+
 # Registrando os testes com CTest
 add_test(NAME GrafosTests COMMAND GrafosTests)
 add_test(NAME PrimitivesTests COMMAND PrimitivesTests)

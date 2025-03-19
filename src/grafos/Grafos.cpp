@@ -14,19 +14,32 @@ struct FeedbackArgs {
     const std::string action;
 };
 
+template <typename T>
+void makeFeedbackResponse(const bool response, const FeedbackArgs<T> &args) {
+    if (!response) {
+        std::cout << "\n[ERRO] Ocorreu um erro durante a operação! Tente novamente.\n";
+        return;
+    }
+
+    std::cout << "\n=======================================\n"
+              << "            RESULTADOS\n"
+              << "=======================================\n"
+              << " Item: " << args.item << "\n"
+              << " Ação: " << args.action << "\n"
+              << "=======================================\n";
+}
+
 void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
     int op;
     do {
         std::cout << "\n--- " << tituloGrafo << " ---\n";
         std::cout << "1 - Adicionar vértice\n";
         std::cout << "2 - Remover vértice\n";
-        std::cout << "3 - Consultar nome do vértice\n";
-        std::cout << "4 - Consultar vizinhos do vértice\n";
-        std::cout << "5 - Adicionar aresta\n";
-        std::cout << "6 - Remover aresta\n";
-        std::cout << "7 - Consultar aresta\n";
-        std::cout << "8 - Exibir grafo\n";
-        std::cout << "9 - Voltar\n";
+        std::cout << "3 - Consultar vizinhos do vértice\n";
+        std::cout << "4 - Adicionar aresta\n";
+        std::cout << "5 - Remover aresta\n";
+        std::cout << "6 - Exibir grafo\n";
+        std::cout << "7 - Voltar\n";
         std::cout << "Escolha: ";
         std::cin >> op;
 
@@ -53,7 +66,7 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
                 makeFeedbackResponse<int>(response, { input, action: "REMOCAO" });
                 break;
             }
-            case 4: {
+            case 3: {
                 int indice;
                 std::cout << "Digite o índice do vértice a ser consultado: ";
                 std::cin >> indice;
@@ -63,7 +76,7 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
                 std::cout << std::endl;
                 break;
             }
-            case 5: {
+            case 4: {
                 int origem, destino, peso;
                 std::cout << "Digite o índice de origem, destino e o peso da aresta: ";
                 std::cin >> origem >> destino >> peso;
@@ -73,7 +86,7 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
 
                 break;
             }
-            case 6: {
+            case 5: {
                 int origem, destino;
                 std::cout << "Digite os índices de origem e destino da aresta a ser removida: ";
                 std::cin >> origem >> destino;
@@ -83,31 +96,16 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
 
                 break;
             }
-            case 8:
+            case 6:
                 grafo.imprime();
                 break;
-            case 9:
+            case 7:
                 std::cout << "Voltando...\n";
                 break;
             default:
                 std::cout << "Opção inválida! Tente novamente.\n";
         }
     } while (op != 9);
-}
-
-template <typename T>
-void makeFeedbackResponse(const bool response, const FeedbackArgs<T> &args) {
-    if (!response) {
-        std::cout << "\n[ERRO] Ocorreu um erro durante a operação! Tente novamente.\n";
-        return;
-    }
-
-    std::cout << "\n=======================================\n"
-              << "            RESULTADOS\n"
-              << "=======================================\n"
-              << " Item: " << args.item << "\n"
-              << " Ação: " << args.action << "\n"
-              << "=======================================\n";
 }
 
 int main() {

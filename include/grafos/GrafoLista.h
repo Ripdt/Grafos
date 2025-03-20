@@ -10,7 +10,6 @@
 #include <set>
 
 //------------------------------------------------------------
-
 typedef std::set<Aresta> ListaArestas;
 typedef std::pair<Pointer<Vertice>, ListaArestas> ArestasPorVertice;
 typedef std::map<Pointer<Vertice>, ListaArestas> ListaAdjacencia;
@@ -69,9 +68,7 @@ public:
   );
 
 private:
-  const Pointer<Vertice>& buscaVertice(
-    const int indice
-  ) const;
+  Pointer<Vertice> buscaVertice(const int indice) const;
 
   const Aresta* buscaAresta(
     const Pointer<Vertice>& origem,

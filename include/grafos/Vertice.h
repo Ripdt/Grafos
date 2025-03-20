@@ -25,6 +25,8 @@ public:
   int getIndice() const;
 
   std::string getLabel() const;
+
+  void setIndice(int novoIndice); 
 };
 
 #endif

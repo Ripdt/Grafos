@@ -55,3 +55,7 @@ std::string Vertice::getLabel() const
 }
 
 //------------------------------------------------------------
+
+void Vertice::setIndice(int novoIndice) {
+  indice = novoIndice;
+}

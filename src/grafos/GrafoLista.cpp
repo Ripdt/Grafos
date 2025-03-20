@@ -18,35 +18,11 @@ GrafoLista::GrafoLista(
 
 //------------------------------------------------------------
 
-bool GrafoLista::inserirVertice(
-  const std::string label
-)
-{
-  ArestasPorVertice p(new Vertice(numeroVerticesAdicionados, label), ListaArestas());
-  listaAdjacencia.insert(p);
-  numeroVerticesAdicionados++;
-  return true;
-}
-
-//------------------------------------------------------------
-
-bool GrafoLista::removerVertice(const int indice) {
-  Pointer<Vertice> vertice = buscaVertice(indice);
-  if (vertice == nullptr) return false;
-
-  for (auto& par : listaAdjacencia) {
-      ListaArestas& arestas = par.second;
-      for (auto it = arestas.begin(); it != arestas.end(); ) {
-          if (it->getDestino()->getIndice() == indice) {
-              it = arestas.erase(it);
-          } else {
-              ++it;
-          }
-      }
-  }
-
-  listaAdjacencia.erase(vertice);
-
+bool GrafoLista::inserirVertice(const std::string label) {
+  // Usar o tamanho atual da lista como índice (garante índices sequenciais)
+  int novoIndice = listaAdjacencia.size();
+  Pointer<Vertice> novoVertice(new Vertice(novoIndice, label));
+  listaAdjacencia[novoVertice] = ListaArestas();
   return true;
 }
 
@@ -73,21 +49,22 @@ bool GrafoLista::inserirAresta(const int origem, const int destino, const int pe
 
   if (!verticeOrigem || !verticeDestino) return false;
 
-  auto atualizarAresta = [](ListaArestas& arestas, Vertice* origem, Vertice* destino, int peso) {
-      for (auto it = arestas.begin(); it != arestas.end(); ) {
-          if (it->getDestino()->getIndice() == destino->getIndice()) {
-              it = arestas.erase(it);
-          } else {
-              ++it;
-          }
-      }
-      arestas.insert(Aresta(origem, destino, peso));
-  };
+  // Criar a nova aresta
+  Aresta novaAresta(verticeOrigem.getRaw(), verticeDestino.getRaw(), peso);
 
-  atualizarAresta(listaAdjacencia[verticeOrigem], verticeOrigem.getRaw(), verticeDestino.getRaw(), peso);
+  // Remover a aresta antiga, se existir
+  ListaArestas& arestasOrigem = listaAdjacencia[verticeOrigem];
+  arestasOrigem.erase(novaAresta); // Remove a aresta antiga (se existir)
 
+  // Inserir a nova aresta
+  arestasOrigem.insert(novaAresta);
+
+  // Se o grafo não for direcionado, inserir a aresta inversa
   if (!ehDirecionado) {
-      atualizarAresta(listaAdjacencia[verticeDestino], verticeDestino.getRaw(), verticeOrigem.getRaw(), peso);
+      Aresta arestaInversa(verticeDestino.getRaw(), verticeOrigem.getRaw(), peso);
+      ListaArestas& arestasDestino = listaAdjacencia[verticeDestino];
+      arestasDestino.erase(arestaInversa); // Remove a aresta inversa antiga (se existir)
+      arestasDestino.insert(arestaInversa);
   }
 
   return true;
@@ -95,15 +72,13 @@ bool GrafoLista::inserirAresta(const int origem, const int destino, const int pe
 
 //------------------------------------------------------------
 
-const Pointer<Vertice>& GrafoLista::buscaVertice(
-  const int indice
-) const
-{
-  for (auto& pair : listaAdjacencia) {
-    if (pair.first->getIndice() == indice) 
-      return pair.first;
+Pointer<Vertice> GrafoLista::buscaVertice(const int indice) const {
+  for (const auto& pair : listaAdjacencia) {
+      if (pair.first->getIndice() == indice) {
+          return pair.first; // Retorna uma cópia do shared_ptr/unique_ptr
+      }
   }
-  return nullptr;
+  return nullptr; // Retorna nullptr por valor
 }
 
 //------------------------------------------------------------
@@ -112,6 +87,7 @@ const Aresta* GrafoLista::buscaAresta(const Pointer<Vertice>& origem, const int 
   auto it = listaAdjacencia.find(origem);
   if (it == listaAdjacencia.end()) return nullptr;
 
+  // Procurar a aresta com o destino especificado
   for (const Aresta& aresta : it->second) {
       if (aresta.getDestino()->getIndice() == destino) {
           return &aresta;
@@ -147,23 +123,21 @@ bool GrafoLista::removerAresta(const int origem, const int destino) {
 
 //------------------------------------------------------------
 
-bool GrafoLista::existeAresta(
-  const int origem, 
-  const int destino
-)
-{
-  return buscaAresta(buscaVertice(origem), destino) != nullptr;
+bool GrafoLista::existeAresta(const int origem, const int destino) {
+  Pointer<Vertice> verticeOrigem = buscaVertice(origem);
+  if (!verticeOrigem) return false;
+
+  return buscaAresta(verticeOrigem, destino) != nullptr;
 }
 
 //------------------------------------------------------------
 
-int GrafoLista::pesoAresta(
-  const int origem, 
-  const int destino
-)
-{
-  const Aresta* aresta = buscaAresta(buscaVertice(origem), destino);
-  return aresta != nullptr ? aresta->getPeso() : 0;
+int GrafoLista::pesoAresta(const int origem, const int destino) {
+  Pointer<Vertice> verticeOrigem = buscaVertice(origem);
+  if (!verticeOrigem) return 0;
+
+  const Aresta* aresta = buscaAresta(verticeOrigem, destino);
+  return aresta ? aresta->getPeso() : 0;
 }
 
 //------------------------------------------------------------
@@ -200,4 +174,45 @@ void GrafoLista::imprime() {
       }
       std::cout << std::endl;
   }
+}
+
+// -
+
+bool GrafoLista::removerVertice(const int indice) {
+    Pointer<Vertice> vertice = buscaVertice(indice);
+    if (vertice == nullptr) return false;
+
+    // Remover todas as arestas que apontam para este vértice
+    for (auto& par : listaAdjacencia) {
+        ListaArestas& arestas = par.second;
+        for (auto it = arestas.begin(); it != arestas.end(); ) {
+            if (it->getDestino()->getIndice() == indice) {
+                it = arestas.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
+
+    // Remover o vértice da lista de adjacência
+    listaAdjacencia.erase(vertice);
+
+    // Reindexar os vértices restantes
+    int novoIndice = 0;
+    std::map<Pointer<Vertice>, ListaArestas> novaListaAdj;
+
+    for (auto& par : listaAdjacencia) {
+        Pointer<Vertice> v = par.first;
+        v->setIndice(novoIndice); // Atualiza o índice do vértice
+        novaListaAdj[v] = std::move(par.second);
+        novoIndice++;
+    }
+
+    // Atualizar a lista de adjacência
+    listaAdjacencia = std::move(novaListaAdj);
+
+    // Atualizar o contador de vértices
+    numeroVerticesAdicionados = listaAdjacencia.size(); // Correção crítica
+
+    return true;
 }

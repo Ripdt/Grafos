@@ -9,17 +9,20 @@
 #include "primitives/Pointer.h"
 
 //------------------------------------------------------------
+#include <vector>
+#include "Grafo.h"
+#include "Aresta.h"
 
-class GrafoMatriz : public Grafo
-{
+class GrafoMatriz : public Grafo {
 private:
-  std::vector<Vertice> vertices;
-  Matrix<Pointer<Aresta>> matriz;
+    std::vector<std::vector<Aresta*>> matriz; 
+    std::vector<Vertice> vertices;            
+
 public:
-  GrafoMatriz(
-    const bool _ehDirecionado,
-    const bool _ehPonderado
-  );
+    GrafoMatriz(
+      const bool _ehDirecionado, 
+      const bool _ehPonderado
+    );
 
   virtual ~GrafoMatriz() = default;
 

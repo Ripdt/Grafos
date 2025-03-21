@@ -11,7 +11,7 @@ GrafoMatriz::GrafoMatriz(
   const bool _ehPonderado
 ) :
   Grafo(_ehDirecionado, _ehPonderado),
-  matriz()x
+  matriz()
 {
 } 
 

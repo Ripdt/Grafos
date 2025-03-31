@@ -4,6 +4,7 @@
 
 #include "grafos/GrafoLista.h"
 #include "grafos/GrafoMatriz.h"
+#include "grafos/GrafoStreamer.h"
 
 const std::string TITULO_GRAFO_LISTA = "Grafo Lista de Adjacência";
 const std::string TITULO_GRAFO_MATRIZ = "Grafo Matriz de Adjacência";
@@ -52,7 +53,7 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
 
                 const bool response = grafo.inserirVertice(input);;
 
-                makeFeedbackResponse<std::string>(response, { input, action: "ADICAO" });
+                makeFeedbackResponse<std::string>(response, { input, "ADICAO" });
 
                 break;
             }
@@ -63,7 +64,7 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
 
                 const bool response = grafo.removerVertice(input);
 
-                makeFeedbackResponse<int>(response, { input, action: "REMOCAO" });
+                makeFeedbackResponse<int>(response, { input, "REMOCAO" });
                 break;
             }
             case 3: {
@@ -82,7 +83,7 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
                 std::cin >> origem >> destino >> peso;
 
                 const bool response = grafo.inserirAresta(origem, destino, peso);
-                makeFeedbackResponse<std::string>(response, { item: origem + " - " + destino, action: "INSERCAO" });
+                makeFeedbackResponse<std::string>(response, { origem + " - " + destino, "INSERCAO" });
 
                 break;
             }
@@ -92,7 +93,7 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
                 std::cin >> origem >> destino;
 
                 const bool response = grafo.removerAresta(origem, destino);
-                makeFeedbackResponse<std::string>(response, { item: origem + " - " + destino, action: "REMOCAO" });
+                makeFeedbackResponse<std::string>(response, { origem + " - " + destino, "REMOCAO" });
 
                 break;
             }
@@ -108,47 +109,93 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
     } while (op != 9);
 }
 
+void lerGrafo()
+{
+  std::cout << "\n===== CONFIGURAÇÃO DO GRAFO =====\n";
+  std::cout << "Escolha o tipo de grafo:\n";
+  std::cout << "1 - Matriz ";
+  std::cout << "2 - Lista ";
+
+  int tipo;
+  std::cin >> tipo;
+  Adjacencia adjacencia = tipo == 1 ? Adjacencia::MATRIZ : Adjacencia::LISTA;
+
+  std::cout << "\nInsira o caminho do arquivo: ";
+  std::string caminho;
+  std::cin >> caminho;
+
+  if (caminho.compare("ex") == 0) caminho = "../grafo.txt";
+
+  GrafoStreamer grafoStreamer(adjacencia);
+  if (Pointer<Grafo> grafo = grafoStreamer.ler(caminho)) {
+    std::cout << std::endl;
+    grafo->imprime();
+    std::cout << std::endl;
+  }
+}
+
 int main() {
   setlocale(LC_ALL, "pt_BR.UTF-8");
 
   int escolha = 0;
-
-  std::cout << "\n===== CONFIGURAÇÃO DO GRAFO =====\n";
     
-  std::cout << "Escolha o tipo de grafo:\n";
-
-  std::string direcionado, ponderado;
-  std::cout << "\tDirecionado (S/N)? ";
-  std::cin >> direcionado;
-  std::cout << "\tPonderado (S/N)? ";
-  std::cin >> ponderado;
-
-  const bool ehDirecionado = direcionado == "S";
-  const bool ehPonderado = ponderado == "S";
-    
-  GrafoLista grafoLista(ehDirecionado, ehPonderado);
-  GrafoMatriz grafoMatriz(ehDirecionado, ehPonderado);
+  Pointer<GrafoLista> grafoLista = nullptr;
+  Pointer<GrafoMatriz> grafoMatriz = nullptr;
 
   do {
-      std::cout << "\n===== MENU PRINCIPAL =====\n";
-      std::cout << "1 - Usar Lista de Adjacência\n";
-      std::cout << "2 - Usar Matriz de Adjacência\n";
-      std::cout << "3 - Sair\n";
-      std::cout << "Escolha uma opção: ";
-      std::cin >> escolha;
+    std::cout << "\n===== MENU PRINCIPAL =====\n";
+    std::cout << "1 - Usar Lista de Adjacência\n";
+    std::cout << "2 - Usar Matriz de Adjacência\n";
+    std::cout << "3 - Carregar grafo\n";
+    std::cout << "4 - Sair\n";
+    std::cout << "Escolha uma opção: ";
+    std::cin >> escolha;
 
-      switch (escolha) {
-          case 1:
-              menuGrafo(grafoLista, TITULO_GRAFO_LISTA);
-              break;
-          case 2:
-              menuGrafo(grafoMatriz, TITULO_GRAFO_MATRIZ);
-              break;
-          case 3:
-              std::cout << "Saindo do programa...\n";
-              break;
-          default:
-              std::cout << "Opção inválida! Tente novamente.\n";
+    switch (escolha) {
+      case 1:
+        if (grafoLista == nullptr) {
+          std::cout << "\n===== CONFIGURAÇÃO DO GRAFO =====\n";
+
+          std::cout << "Escolha o tipo de grafo:\n";
+
+          std::string direcionado, ponderado;
+          std::cout << "\tDirecionado (S/N)? ";
+          std::cin >> direcionado;
+          std::cout << "\tPonderado (S/N)? ";
+          std::cin >> ponderado;
+
+          const bool ehDirecionado = direcionado == "S";
+          const bool ehPonderado = ponderado == "S";
+          grafoLista = new GrafoLista(ehDirecionado, ehPonderado);
+        }
+        menuGrafo(*grafoLista, TITULO_GRAFO_LISTA);
+        break;
+      case 2:
+        if (grafoMatriz == nullptr) {
+          std::cout << "\n===== CONFIGURAÇÃO DO GRAFO =====\n";
+
+          std::cout << "Escolha o tipo de grafo:\n";
+
+          std::string direcionado, ponderado;
+          std::cout << "\tDirecionado (S/N)? ";
+          std::cin >> direcionado;
+          std::cout << "\tPonderado (S/N)? ";
+          std::cin >> ponderado;
+
+          const bool ehDirecionado = direcionado == "S";
+          const bool ehPonderado = ponderado == "S";
+          grafoMatriz = new GrafoMatriz(ehDirecionado, ehPonderado);
+        }
+        menuGrafo(*grafoMatriz, TITULO_GRAFO_MATRIZ);
+        break;
+      case 3:
+        lerGrafo();
+        break;
+      case 4:
+        std::cout << "Saindo do programa...\n";
+        break;
+      default:
+        std::cout << "Opção inválida! Tente novamente.\n";
       }
   } while (escolha != 3);
 

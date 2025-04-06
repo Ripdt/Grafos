@@ -116,16 +116,19 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
 
 void lerGrafo()
 {
-  std::cout << "\n===== CONFIGURAÇÃO DO GRAFO =====\n";
+  std::cout << "\n========================================\n";
+  std::cout << "         CONFIGURAÇÃO DO GRAFO\n";
+  std::cout << "========================================\n";
   std::cout << "Escolha o tipo de grafo:\n";
-  std::cout << "1 - Matriz ";
-  std::cout << "2 - Lista ";
-
+  std::cout << "  1 - Matriz de Adjacência\n";
+  std::cout << "  2 - Lista de Adjacência\n";
+  std::cout << ">> ";
+  
   int tipo;
   std::cin >> tipo;
   Adjacencia adjacencia = tipo == 1 ? Adjacencia::MATRIZ : Adjacencia::LISTA;
 
-  std::cout << "\nInsira o caminho do arquivo: ";
+  std::cout << "\nInsira o caminho do arquivo (ex: ex001): ";
   std::string caminho;
   std::cin >> caminho;
 
@@ -133,32 +136,41 @@ void lerGrafo()
     caminho = "../exemplo" + caminho.substr(2,3) + ".txt";
   }
 
-  std::cout << "\nLendo grafo...";
+  std::cout << "\nLendo grafo do arquivo: " << caminho << "...\n";
 
   GrafoStreamer grafoStreamer(adjacencia);
   if (Pointer<Grafo> grafo = grafoStreamer.ler(caminho)) {
-    std::cout << std::endl;
+    std::cout << "\n========================================\n";
+    std::cout << "             GRAFO CARREGADO\n";
+    std::cout << "========================================\n";
     grafo->imprime();
-    std::cout << std::endl;
+    std::cout << "\n";
 
     int origem;
     std::cout << "Digite o índice do vértice de origem: ";
     std::cin >> origem;
 
-    std::cout << std::endl;
+    std::cout << "\n========================================\n";
+    std::cout << "       BUSCA EM PROFUNDIDADE (DFS)\n";
+    std::cout << "========================================\n";
     BuscaProfundidade buscaProfundidade(*grafo);
     buscaProfundidade.percorrerTodosOsVertices(origem);
-    std::cout << std::endl;
 
-    std::cout << std::endl;
+    std::cout << "\n========================================\n";
+    std::cout << "        BUSCA EM LARGURA (BFS)\n";
+    std::cout << "========================================\n";
     BuscaLargura buscaLargura(*grafo);
     buscaLargura.percorrerTodosOsVertices(origem);
-    std::cout << std::endl;
 
-    std::cout << std::endl;
+    std::cout << "\n========================================\n";
+    std::cout << "     ALGORITMO DE DIJKSTRA (Caminhos)\n";
+    std::cout << "========================================\n";
     AlgoritmoDijkstra algoritmo(*grafo);
     algoritmo.rodar(origem);
-    std::cout << std::endl;
+
+    std::cout << "\n";
+  } else {
+    std::cout << "\n[Erro] Não foi possível ler o grafo do arquivo.\n";
   }
 }
 

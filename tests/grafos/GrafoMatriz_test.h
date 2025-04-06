@@ -14,7 +14,10 @@ class GrafoMatriz;
 class GrafoMatrizTest : public ::testing::Test
 {
 protected:
-    GrafoMatriz *grafo;
+    GrafoMatriz* grafoNaoDirecionalPonderado;
+    GrafoMatriz* grafoDirecionalPonderado;
+    GrafoMatriz* grafoNaoDirecionalNaoPonderado;
+    GrafoMatriz* grafoDirecionalNaoPonderado;
 
     void SetUp() override;
     void TearDown() override;

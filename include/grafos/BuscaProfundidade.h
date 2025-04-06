@@ -3,7 +3,7 @@
 
 #include "grafos/Grafo.h"
 
-#include <vector>
+#include <set>
 
 class Vertice;
 
@@ -17,19 +17,15 @@ class BuscaProfundidade
       const Grafo& _grafo
     );
 
-    std::vector<Vertice> buscarCaminhoParaTodosVertices(
+    void percorrerTodosOsVertices(
       const int origem
     ) const;
 
   private:
-    void buscarCaminhoParaTodosVertices(
+    void percorrerTodosOsVertices(
       const int origem,
-      std::vector<Vertice>& verticesVisitados
-    ) const;
-
-    bool foiVisitado(
-      const Vertice& vertice,
-      const std::vector<Vertice>& verticesVisitados
+      std::set<Vertice>& verticesVisitados,
+      const int profundidade = 0
     ) const;
 };
 #endif

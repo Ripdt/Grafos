@@ -144,9 +144,7 @@ void lerGrafo()
     std::cin >> origem;
 
     BuscaProfundidade buscaProfundidade(*grafo);
-    for (const Vertice& vertice : buscaProfundidade.buscarCaminhoParaTodosVertices(origem)) {
-      std::cout << "\t" << vertice.getIndice() << " -  Nome: " << vertice.getLabel() << std::endl;
-    }
+    buscaProfundidade.percorrerTodosOsVertices(origem);
   }
 }
 

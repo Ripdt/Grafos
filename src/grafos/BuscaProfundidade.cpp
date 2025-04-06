@@ -1,8 +1,8 @@
-#include "grafos/BuscaProfundidade.h"
+﻿#include "grafos/BuscaProfundidade.h"
 
 #include "grafos/Vertice.h"
 
-#include <unordered_map>
+#include <iostream>
 
 BuscaProfundidade::BuscaProfundidade(
   const Grafo& _grafo
@@ -11,54 +11,34 @@ BuscaProfundidade::BuscaProfundidade(
 {
 }
 
-std::vector<Vertice> BuscaProfundidade::buscarCaminhoParaTodosVertices(
+void BuscaProfundidade::percorrerTodosOsVertices(
   const int origem
 ) const
 {
-  std::vector<Vertice> caminho;
+  std::set<Vertice> caminho;
+  caminho.insert(grafo.getVertice(origem));
 
-  caminho.push_back(grafo.getVertice(origem));
-  buscarCaminhoParaTodosVertices(origem, caminho);
-
-  return caminho;
+  percorrerTodosOsVertices(origem, caminho);
 }
 
 
-void BuscaProfundidade::buscarCaminhoParaTodosVertices(
+void BuscaProfundidade::percorrerTodosOsVertices(
   const int origem,
-  std::vector<Vertice>& verticesVisitados
+  std::set<Vertice>& verticesVisitados,
+  const int profundidade
 ) const
 {
-  if (verticesVisitados.size() == grafo.numeroVertices())
-    return;
-
-  std::vector<std::vector<Vertice>> caminhos;
-
-  for (const Vertice& vertice : grafo.vizinhosVertice(origem)) {
-    if (foiVisitado(vertice, verticesVisitados))
-      continue;
-
-    std::vector<Vertice> caminho = verticesVisitados;
-    caminho.push_back(vertice);
-
-    buscarCaminhoParaTodosVertices(vertice.getIndice(), caminho);
-
-    caminhos.push_back(caminho);
+  if (verticesVisitados.size() > 1) {
+    for (int i = 0; i < profundidade; i++)
+      std::cout << "\t";
   }
 
-  for (std::vector<Vertice> caminho : caminhos)
-    if (verticesVisitados.size() < caminho.size())
-      verticesVisitados = caminho;
-}
+  const Vertice& vertice = grafo.getVertice(origem);
+  std::cout << vertice.getIndice() << " - " << vertice.getLabel() << std::endl;
 
-bool BuscaProfundidade::foiVisitado(
-  const Vertice& vertice,
-  const std::vector<Vertice>& verticesVisitados
-) const
-{
-  auto ehVertice = [&vertice](const Vertice& v) {
-    return v.getIndice() == vertice.getIndice();
-  };
-
-  return std::find_if(verticesVisitados.begin(), verticesVisitados.end(), ehVertice) != verticesVisitados.end();
+  for (const Vertice& vertice : grafo.vizinhosVertice(origem)) {
+    auto& resultado = verticesVisitados.insert(vertice);
+    if (resultado.second)
+      percorrerTodosOsVertices(vertice.getIndice(), verticesVisitados, profundidade + 1);
+  }
 }

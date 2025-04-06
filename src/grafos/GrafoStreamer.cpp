@@ -58,7 +58,7 @@ Grafo* GrafoStreamer::ler(
       const std::vector<std::string> tokens = Utils::split(line, ' ');
       if (tokens.size() != 3)
       {
-        std::cerr << "Aresta inválida: " << line << std::endl;
+        std::cerr << "Aresta invalida: " << line << std::endl;
         throw std::exception();
       }
       const int origem = std::stoi(tokens[0]);
@@ -88,7 +88,7 @@ Grafo* GrafoStreamer::criarGrafo(
 {
   const std::vector<std::string> tokens = Utils::split(line, ' ');
   if (tokens.size() != 4) {
-    const std::string msg = "Grafo inválido: " + line;
+    const std::string msg = "Grafo invalido: " + line;
     throw std::exception(msg.c_str());
   }
 

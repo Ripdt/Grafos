@@ -6,6 +6,7 @@
 #include "grafos/GrafoMatriz.h"
 #include "grafos/GrafoStreamer.h"
 
+#include "grafos/AlgoritmoDijkstra.h"
 #include "grafos/BuscaLargura.h"
 #include "grafos/BuscaProfundidade.h"
 
@@ -152,6 +153,11 @@ void lerGrafo()
     std::cout << std::endl;
     BuscaLargura buscaLargura(*grafo);
     buscaLargura.percorrerTodosOsVertices(origem);
+    std::cout << std::endl;
+
+    std::cout << std::endl;
+    AlgoritmoDijkstra algoritmo(*grafo);
+    algoritmo.rodar(origem);
     std::cout << std::endl;
   }
 }

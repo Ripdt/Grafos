@@ -6,6 +6,8 @@
 #include "grafos/GrafoMatriz.h"
 #include "grafos/GrafoStreamer.h"
 
+#include "grafos/BuscaProfundidade.h"
+
 const std::string TITULO_GRAFO_LISTA = "Grafo Lista de Adjacência";
 const std::string TITULO_GRAFO_MATRIZ = "Grafo Matriz de Adjacência";
 
@@ -78,14 +80,15 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
                 break;
             }
             case 4: {
-                int origem, destino, peso;
-                std::cout << "Digite o índice de origem, destino e o peso da aresta: ";
-                std::cin >> origem >> destino >> peso;
+              int origem, destino;
+              float peso;
+              std::cout << "Digite o índice de origem, destino e o peso da aresta: ";
+              std::cin >> origem >> destino >> peso;
 
-                const bool response = grafo.inserirAresta(origem, destino, peso);
-                makeFeedbackResponse<std::string>(response, { origem + " - " + destino, "INSERCAO" });
+              const bool response = grafo.inserirAresta(origem, destino, peso);
+              makeFeedbackResponse<std::string>(response, { origem + " - " + destino, "INSERCAO" });
 
-                break;
+              break;
             }
             case 5: {
                 int origem, destino;
@@ -124,13 +127,26 @@ void lerGrafo()
   std::string caminho;
   std::cin >> caminho;
 
-  if (caminho.compare("ex") == 0) caminho = "../grafo.txt";
+  if (caminho.substr(0,2).compare("ex") == 0) {
+    caminho = "../exemplo" + caminho.substr(2,3) + ".txt";
+  }
+
+  std::cout << "\nLendo grafo...";
 
   GrafoStreamer grafoStreamer(adjacencia);
   if (Pointer<Grafo> grafo = grafoStreamer.ler(caminho)) {
     std::cout << std::endl;
     grafo->imprime();
     std::cout << std::endl;
+
+    int origem;
+    std::cout << "Digite o índice do vértice de origem: ";
+    std::cin >> origem;
+
+    BuscaProfundidade buscaProfundidade(*grafo);
+    for (const Vertice& vertice : buscaProfundidade.buscarCaminhoParaTodosVertices(origem)) {
+      std::cout << "\t" << vertice.getIndice() << " -  Nome: " << vertice.getLabel() << std::endl;
+    }
   }
 }
 
@@ -197,7 +213,7 @@ int main() {
       default:
         std::cout << "Opção inválida! Tente novamente.\n";
       }
-  } while (escolha != 3);
+  } while (escolha != 4);
 
   return 0;
 }

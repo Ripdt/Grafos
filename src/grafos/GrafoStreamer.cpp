@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <locale>
 
 namespace Utils
 {
@@ -62,7 +63,12 @@ Grafo* GrafoStreamer::ler(
       }
       const int origem = std::stoi(tokens[0]);
       const int destino = std::stoi(tokens[1]);
-      const int peso = std::stoi(tokens[2]);
+
+      std::istringstream iss(tokens[2]);
+      iss.imbue(std::locale("C"));
+      float peso;
+      iss >> peso;
+
       grafo->inserirAresta(origem, destino, peso);
     }
 

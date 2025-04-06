@@ -8,10 +8,10 @@ private:
     const Vertice* origem;
     const Vertice* destino;
     bool estaAtiva = false;
-    const int peso;
+    const float peso;
 
 public:
-    Aresta(const Vertice* _origem, const Vertice* _destino, const int _peso);
+    Aresta(const Vertice* _origem, const Vertice* _destino, const float _peso);
 
     bool operator==(const Aresta& aresta) const;
     bool operator<(const Aresta& outra) const; // Declaração apenas
@@ -20,7 +20,7 @@ public:
 
     const Vertice* getOrigem() const;
     const Vertice* getDestino() const;
-    int getPeso() const;
+    float getPeso() const;
 };
 
 #endif

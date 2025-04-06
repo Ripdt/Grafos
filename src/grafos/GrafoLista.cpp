@@ -30,7 +30,7 @@ bool GrafoLista::inserirVertice(const std::string label) {
 
 std::string GrafoLista::labelVertice(
   const int indice
-)
+) const
 {
   for (auto& pair : listaAdjacencia) {
     const Vertice* vertice = pair.first;
@@ -43,14 +43,15 @@ std::string GrafoLista::labelVertice(
 
 //------------------------------------------------------------
 
-bool GrafoLista::inserirAresta(const int origem, const int destino, const int peso) {
+bool GrafoLista::inserirAresta(const int origem, const int destino, const float peso) {
   Pointer<Vertice> verticeOrigem = buscaVertice(origem);
   Pointer<Vertice> verticeDestino = buscaVertice(destino);
 
   if (!verticeOrigem || !verticeDestino) return false;
 
   // Criar a nova aresta
-  Aresta novaAresta(verticeOrigem.getRaw(), verticeDestino.getRaw(), peso);
+  const float pesoAresta = ehPonderado ? peso : 1;
+  Aresta novaAresta(verticeOrigem.getRaw(), verticeDestino.getRaw(), pesoAresta);
 
   // Remover a aresta antiga, se existir
   ListaArestas& arestasOrigem = listaAdjacencia[verticeOrigem];
@@ -72,7 +73,7 @@ bool GrafoLista::inserirAresta(const int origem, const int destino, const int pe
 
 //------------------------------------------------------------
 
-Pointer<Vertice> GrafoLista::buscaVertice(const int indice) const {
+Pointer<Vertice> GrafoLista::buscaVertice(const size_t indice) const {
   for (const auto& pair : listaAdjacencia) {
       if (pair.first->getIndice() == indice) {
           return pair.first; // Retorna uma cópia do shared_ptr/unique_ptr
@@ -83,7 +84,7 @@ Pointer<Vertice> GrafoLista::buscaVertice(const int indice) const {
 
 //------------------------------------------------------------
 
-const Aresta* GrafoLista::buscaAresta(const Pointer<Vertice>& origem, const int destino) {
+const Aresta* GrafoLista::buscaAresta(const Pointer<Vertice>& origem, const int destino) const {
   auto it = listaAdjacencia.find(origem);
   if (it == listaAdjacencia.end()) return nullptr;
 
@@ -123,7 +124,7 @@ bool GrafoLista::removerAresta(const int origem, const int destino) {
 
 //------------------------------------------------------------
 
-bool GrafoLista::existeAresta(const int origem, const int destino) {
+bool GrafoLista::existeAresta(const int origem, const int destino) const {
   Pointer<Vertice> verticeOrigem = buscaVertice(origem);
   if (!verticeOrigem) return false;
 
@@ -132,7 +133,7 @@ bool GrafoLista::existeAresta(const int origem, const int destino) {
 
 //------------------------------------------------------------
 
-int GrafoLista::pesoAresta(const int origem, const int destino) {
+float GrafoLista::pesoAresta(const int origem, const int destino) const {
   Pointer<Vertice> verticeOrigem = buscaVertice(origem);
   if (!verticeOrigem) return 0;
 
@@ -142,7 +143,7 @@ int GrafoLista::pesoAresta(const int origem, const int destino) {
 
 //------------------------------------------------------------
 
-std::vector<Vertice> GrafoLista::vizinhosVertice(const int indice) {
+std::vector<Vertice> GrafoLista::vizinhosVertice(const int indice) const {
   Pointer<Vertice> vertice = buscaVertice(indice);
   if (!vertice) return {};
 
@@ -157,10 +158,9 @@ std::vector<Vertice> GrafoLista::vizinhosVertice(const int indice) {
   return vizinhos;
 }
 
-
 //------------------------------------------------------------
 
-void GrafoLista::imprime() {
+void GrafoLista::imprime() const {
   std::cout << "Grafo:" << std::endl;
   for (const auto& pair : listaAdjacencia) {
       const Vertice* vertice = pair.first;
@@ -176,7 +176,7 @@ void GrafoLista::imprime() {
   }
 }
 
-// -
+//------------------------------------------------------------
 
 bool GrafoLista::removerVertice(const int indice) {
     Pointer<Vertice> vertice = buscaVertice(indice);
@@ -211,8 +211,23 @@ bool GrafoLista::removerVertice(const int indice) {
     // Atualizar a lista de adjacência
     listaAdjacencia = std::move(novaListaAdj);
 
-    // Atualizar o contador de vértices
-    numeroVerticesAdicionados = listaAdjacencia.size(); // Correção crítica
-
     return true;
 }
+
+//------------------------------------------------------------
+
+const Vertice& GrafoLista::getVertice(
+  const size_t indice
+) const
+{
+  return *buscaVertice(indice);
+}
+
+//------------------------------------------------------------
+
+size_t GrafoLista::numeroVertices() const
+{
+  return listaAdjacencia.size();
+}
+
+//------------------------------------------------------------

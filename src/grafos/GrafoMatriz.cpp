@@ -25,7 +25,7 @@ bool GrafoMatriz::inserirVertice(const std::string label) {
         }
   }
 
-  int novoIndice = vertices.size();
+  size_t novoIndice = vertices.size();
   vertices.emplace_back(novoIndice, label);
 
   size_t novoNumVertices = vertices.size();
@@ -61,7 +61,7 @@ bool GrafoMatriz::removerVertice(int indiceVertice) {
   }
 
   // João: Faz atualização dos items restantes
-  for (size_t i = indiceVertice; i < vertices.size(); ++i) {
+  for (int i = indiceVertice; i < vertices.size(); ++i) {
       vertices[i].setIndice(i);
   }
 
@@ -70,7 +70,7 @@ bool GrafoMatriz::removerVertice(int indiceVertice) {
 
 //------------------------------------------------------------
 
-std::string GrafoMatriz::labelVertice(const int indice) {
+std::string GrafoMatriz::labelVertice(const int indice) const {
   if (indice < 0 || indice >= (int)vertices.size()) {
     return "";
   }
@@ -79,7 +79,7 @@ std::string GrafoMatriz::labelVertice(const int indice) {
 
 //------------------------------------------------------------
 
-void GrafoMatriz::imprime() {
+void GrafoMatriz::imprime() const {
   if (matriz.empty()) return;
 
   for (const Vertice& vertice : vertices) {
@@ -88,9 +88,9 @@ void GrafoMatriz::imprime() {
   std::cout << std::endl;
 
   // Linhas da matriz
-  for (size_t i = 0; i < matriz.size(); ++i) {
+  for (int i = 0; i < matriz.size(); ++i) {
     std::cout << vertices[i].getLabel();
-    for (size_t j = 0; j < matriz[i].size(); ++j) {
+    for (int j = 0; j < matriz[i].size(); ++j) {
       if (matriz[i][j] == nullptr) {
         std::cout << "\t0";
       } else {
@@ -103,7 +103,7 @@ void GrafoMatriz::imprime() {
 
 //------------------------------------------------------------
 
-bool GrafoMatriz::inserirAresta(int origem, int destino, int peso) {
+bool GrafoMatriz::inserirAresta(int origem, int destino, float peso) {
   if (origem < 0 || destino < 0 || origem >= (int)vertices.size() || destino >= (int)vertices.size()) {
       return false;
   }
@@ -151,7 +151,7 @@ bool GrafoMatriz::removerAresta(int origem, int destino) {
 
 //------------------------------------------------------------
 
-int GrafoMatriz::pesoAresta(const int origem, const int destino) {
+float GrafoMatriz::pesoAresta(const int origem, const int destino) const {
   if (matriz[origem][destino] == nullptr) {
       throw std::runtime_error("Aresta não existe");
   }
@@ -160,27 +160,24 @@ int GrafoMatriz::pesoAresta(const int origem, const int destino) {
 
 //------------------------------------------------------------
 
-std::vector<Vertice> GrafoMatriz::vizinhosVertice(const int indice) {
+std::vector<Vertice> GrafoMatriz::vizinhosVertice(const int indice) const {
   std::set<Vertice> vizinhos;
 
-  for (size_t i = 0; i < matriz.size(); ++i) {
-      if (matriz[i][indice] != nullptr) {
-          vizinhos.insert(*matriz[i][indice]->getOrigem());
-      }
-  }
+  for (int i = 0; i < matriz.size(); ++i)
+      if (matriz[indice][i] != nullptr)
+          vizinhos.insert(*matriz[indice][i]->getDestino());
 
-  for (size_t j = 0; j < matriz[indice].size(); ++j) {
-      if (matriz[indice][j] != nullptr) {
-          vizinhos.insert(*matriz[indice][j]->getDestino());
-      }
-  }
-
+  if (!ehDirecionado) 
+    for (int j = 0; j < matriz[indice].size(); ++j)
+      if (matriz[j][indice] != nullptr)
+        vizinhos.insert(*matriz[j][indice]->getOrigem());
+  
   return std::vector<Vertice>(vizinhos.begin(), vizinhos.end());
 }
 
 //------------------------------------------------------------
 
-bool GrafoMatriz::existeAresta(const int origem, const int destino) {
+bool GrafoMatriz::existeAresta(const int origem, const int destino) const {
   // Verifica se os índices são válidos
   if (origem < 0 || destino < 0 || 
       origem >= (int)matriz.size() || 
@@ -190,3 +187,23 @@ bool GrafoMatriz::existeAresta(const int origem, const int destino) {
   
   return matriz[origem][destino] != nullptr;
 }
+
+//------------------------------------------------------------
+
+const Vertice& GrafoMatriz::getVertice(
+  const size_t indice
+) const
+{
+  return *std::find_if(vertices.begin(), vertices.end(), [indice](const Vertice& v) {
+    return v.getIndice() == indice; 
+  });
+}
+
+//------------------------------------------------------------
+
+size_t GrafoMatriz::numeroVertices() const
+{
+  return vertices.size();
+}
+
+//------------------------------------------------------------

@@ -17,18 +17,15 @@ class Grafo
 protected:
   const bool ehPonderado;
   const bool ehDirecionado;
-  
-protected:
-  unsigned int numeroVerticesAdicionados = 0;
 
 public:
   Grafo(
-    const bool _ehDirecionado, 
+    const bool _ehDirecionado,
     const bool _ehPonderado
-  ) : 
+  ) :
     ehPonderado(_ehPonderado),
     ehDirecionado(_ehDirecionado)
-  { 
+  {
   }
 
   virtual ~Grafo() = default;
@@ -43,34 +40,40 @@ public:
 
   virtual std::string labelVertice(
     const int indice
-  ) = 0;
+  ) const = 0;
 
-  virtual void imprime() = 0;
+  virtual void imprime() const = 0;
 
   virtual bool inserirAresta(
-    const int origem, 
-    const int destino, 
-    const int peso = 1
+    const int origem,
+    const int destino,
+    const float peso = 1.f
   ) = 0;
 
   virtual bool removerAresta(
-    const int origem, 
+    const int origem,
     const int destino
   ) = 0;
 
   virtual bool existeAresta(
-    const int origem, 
+    const int origem,
     const int destino
-  ) = 0;
+  ) const = 0;
 
-  virtual int pesoAresta(
-    const int origem, 
+  virtual float pesoAresta(
+    const int origem,
     const int destino
-  ) = 0;
+  ) const = 0;
 
   virtual std::vector<Vertice> vizinhosVertice(
     const int indice
-  ) = 0;
+  ) const = 0;
+
+  virtual size_t numeroVertices() const = 0;
+
+  virtual const Vertice& getVertice(
+    const size_t indice
+  ) const = 0;
 };
 
 //------------------------------------------------------------

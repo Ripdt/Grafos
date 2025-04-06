@@ -6,6 +6,7 @@
 #include "grafos/GrafoMatriz.h"
 #include "grafos/GrafoStreamer.h"
 
+#include "grafos/BuscaLargura.h"
 #include "grafos/BuscaProfundidade.h"
 
 const std::string TITULO_GRAFO_LISTA = "Grafo Lista de Adjacência";
@@ -143,8 +144,15 @@ void lerGrafo()
     std::cout << "Digite o índice do vértice de origem: ";
     std::cin >> origem;
 
+    std::cout << std::endl;
     BuscaProfundidade buscaProfundidade(*grafo);
     buscaProfundidade.percorrerTodosOsVertices(origem);
+    std::cout << std::endl;
+
+    std::cout << std::endl;
+    BuscaLargura buscaLargura(*grafo);
+    buscaLargura.percorrerTodosOsVertices(origem);
+    std::cout << std::endl;
   }
 }
 

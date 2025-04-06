@@ -17,7 +17,7 @@ class BuscaProfundidade
       const Grafo& _grafo
     );
 
-    void percorrerTodosOsVertices(
+    std::set<Vertice> percorrerTodosOsVertices(
       const int origem
     ) const;
 

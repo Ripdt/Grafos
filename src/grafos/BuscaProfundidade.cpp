@@ -11,7 +11,7 @@ BuscaProfundidade::BuscaProfundidade(
 {
 }
 
-void BuscaProfundidade::percorrerTodosOsVertices(
+std::set<Vertice> BuscaProfundidade::percorrerTodosOsVertices(
   const int origem
 ) const
 {
@@ -19,6 +19,8 @@ void BuscaProfundidade::percorrerTodosOsVertices(
   caminho.insert(grafo.getVertice(origem));
 
   percorrerTodosOsVertices(origem, caminho);
+
+  return caminho;
 }
 
 

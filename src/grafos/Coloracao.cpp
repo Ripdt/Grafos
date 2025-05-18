@@ -3,6 +3,9 @@
 #include "grafos/Grafo.h"
 #include "grafos/Vertice.h"
 
+#include <algorithm>
+#include <list>
+
 //------------------------------------------------------------
 
 Coloracao::Coloracao(const Grafo& _grafo) : grafo(_grafo)
@@ -11,7 +14,7 @@ Coloracao::Coloracao(const Grafo& _grafo) : grafo(_grafo)
 
 //------------------------------------------------------------
 
-std::vector<int> Coloracao::colorir() const
+std::vector<int> Coloracao::colorir_BruteForce() const
 {
   const size_t numVertices = grafo.numeroVertices();
   if (numVertices == 0) {
@@ -21,13 +24,17 @@ std::vector<int> Coloracao::colorir() const
   int numCores = 2;
   while (true) {
     // Inicializa com a primeira combinação (todos vértices com cor 0)
-    std::vector<int> cores(numVertices, 0);
+    std::vector<int> corPorIndice(numVertices /*idx*/, 0 /*cor*/);
 
     do {
-      if (coloracaoValida(cores)) {
-        return cores;
+      if (coloracaoValida(corPorIndice)) {
+        for (int idx = 0; idx < numVertices; idx++) {
+          const int cor = corPorIndice[idx];
+          grafo.getVertice(idx)->setCor(cor);
+        }
+        return corPorIndice;
       }
-    } while (proximaCombinacao(cores, numCores));
+    } while (proximaCombinacao(corPorIndice, numCores));
 
     numCores++;
   }
@@ -37,11 +44,11 @@ std::vector<int> Coloracao::colorir() const
 
 //------------------------------------------------------------
 
-bool Coloracao::coloracaoValida(const std::vector<int>& cores) const 
+bool Coloracao::coloracaoValida(const std::vector<int>& corPorIndice) const
 {
   for (int idxVertice = 0; idxVertice < grafo.numeroVertices(); idxVertice++) {
-    for (const Vertice& vizinho : grafo.vizinhosVertice(idxVertice)) {
-      if (cores[idxVertice] == cores[vizinho.getIndice()]) {
+    for (const Vertice* vizinho : grafo.vizinhosVertice(idxVertice)) {
+      if (corPorIndice[idxVertice] == corPorIndice[vizinho->getIndice()]) {
         return false;
       }
     }
@@ -52,14 +59,14 @@ bool Coloracao::coloracaoValida(const std::vector<int>& cores) const
 
 //------------------------------------------------------------
 
-bool Coloracao::proximaCombinacao(std::vector<int>& cores, int numCores) const {
+bool Coloracao::proximaCombinacao(std::vector<int>& corPorIndice, int numCores) const {
 
-  for (int i = 0; i < cores.size(); i++) {
-    if (cores[i] < numCores - 1) {
-      cores[i]++;
+  for (int i = 0; i < corPorIndice.size(); i++) {
+    if (corPorIndice[i] < numCores - 1) {
+      corPorIndice[i]++;
       // Reseta todos os vértices anteriores para 0
       for (int j = 0; j < i; j++) {
-        cores[j] = 0;
+        corPorIndice[j] = 0;
       }
       return true;
     }
@@ -69,6 +76,37 @@ bool Coloracao::proximaCombinacao(std::vector<int>& cores, int numCores) const {
 
 //------------------------------------------------------------
 
+std::vector<int> Coloracao::colorir_WelshPowell() const
+{
+  std::list<Vertice*> vertices;
+  for (int i = 0; i < grafo.numeroVertices(); i++) {
+    vertices.push_back(grafo.getVertice(i));
+  }
+  vertices.sort([&](Vertice* v1, Vertice* v2) {
+    return v1->getGrau() > v2->getGrau();
+  });
 
+  int cor = vertices.size();
+  while (!vertices.empty()) {
+    Vertice* v = vertices.front();
+    bool corValida = true;
+    for (Vertice* vizinho : grafo.vizinhosVertice(v->getIndice())) {
+      if (vizinho->getCor() == cor) {
+        corValida = false;
+        break;
+      }
+    }
+
+    if (corValida) {
+      v->setCor(cor);
+      vertices.pop_front();
+    }
+    else {
+      cor--;
+    }
+  }
+
+  return std::vector<int>();
+}
 
 //------------------------------------------------------------

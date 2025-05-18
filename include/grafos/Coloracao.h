@@ -13,7 +13,9 @@ public:
     const Grafo& _grafo
   );
 
-  std::vector<int> colorir() const;
+  std::vector<int> colorir_BruteForce() const;
+
+  std::vector<int> colorir_WelshPowell() const;
 
 private:
 

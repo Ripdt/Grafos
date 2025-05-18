@@ -7,6 +7,8 @@ class Vertice
 {
 private:
   int indice;
+  int cor = -1;
+  int grau = 0;
   std::string label;
 
 public:
@@ -27,6 +29,14 @@ public:
   std::string getLabel() const;
 
   void setIndice(int novoIndice); 
+
+  void setCor(int novaCor);
+
+  int getCor() const;
+
+  void aumentarGrau();
+  void diminuirGrau();
+  int getGrau() const;
 };
 
 #endif

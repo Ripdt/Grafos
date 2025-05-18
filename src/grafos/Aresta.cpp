@@ -1,6 +1,6 @@
 #include "Aresta.h"
 
-Aresta::Aresta(const Vertice* _origem, const Vertice* _destino, const float _peso)
+Aresta::Aresta(Vertice* _origem, Vertice* _destino, const float _peso)
     : origem(_origem), destino(_destino), peso(_peso) {}
 
 //------------------------------------------------------------
@@ -20,13 +20,13 @@ bool Aresta::operator<(const Aresta& outra) const {
 
 //------------------------------------------------------------
 
-const Vertice* Aresta::getOrigem() const {
+Vertice* Aresta::getOrigem() const {
     return origem;
 }
 
 //------------------------------------------------------------
 
-const Vertice* Aresta::getDestino() const {
+Vertice* Aresta::getDestino() const {
     return destino;
 }
 

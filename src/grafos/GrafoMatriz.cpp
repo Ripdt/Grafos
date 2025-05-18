@@ -49,19 +49,24 @@ bool GrafoMatriz::removerVertice(int indiceVertice) {
       return false;
   }
 
+  for (size_t i = 0; i < matriz.size(); i++) {
+    auto& linha = matriz[i];
+    const std::vector<Aresta*>::iterator& it = (linha.begin() + indiceVertice);
+    if (*it != nullptr && linha.erase(it) != linha.end()) {
+      (vertices.begin() + i)->diminuirGrau();
+    }
+  }
+
   for (auto& linha : matriz) {
       delete linha[indiceVertice];
       linha[indiceVertice] = nullptr;
   }
 
+  matriz.erase(matriz.begin() + indiceVertice);
+
   vertices.erase(vertices.begin() + indiceVertice);
 
-  matriz.erase(matriz.begin() + indiceVertice);
-  for (auto& linha : matriz) {
-      linha.erase(linha.begin() + indiceVertice);
-  }
-
-  // João: Faz atualização dos items restantes
+  // Faz atualização dos items restantes
   for (int i = indiceVertice; i < vertices.size(); ++i) {
       vertices[i].setIndice(i);
   }
@@ -116,6 +121,7 @@ bool GrafoMatriz::inserirAresta(int origem, int destino, float peso) {
   }
 
   matriz[origem][destino] = new Aresta(&vertices[origem], &vertices[destino], peso);
+  vertices[origem].aumentarGrau();
 
   if (!ehDirecionado) {
     if (matriz[destino][origem] != nullptr) {
@@ -123,6 +129,7 @@ bool GrafoMatriz::inserirAresta(int origem, int destino, float peso) {
           delete matriz[destino][origem];
       }
       matriz[destino][origem] = new Aresta(&vertices[destino], &vertices[origem], peso);
+      vertices[destino].aumentarGrau();
   }
 
   return true;
@@ -141,10 +148,12 @@ bool GrafoMatriz::removerAresta(int origem, int destino) {
 
   delete matriz[origem][destino];
   matriz[origem][destino] = nullptr;
+  vertices[origem].diminuirGrau();
 
   if (!ehDirecionado) {
       delete matriz[destino][origem];
       matriz[destino][origem] = nullptr;
+      vertices[destino].diminuirGrau();
   }
 
   return true;

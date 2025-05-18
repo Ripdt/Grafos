@@ -55,7 +55,9 @@ bool GrafoLista::inserirAresta(const int origem, const int destino, const float 
 
   // Remover a aresta antiga, se existir
   ListaArestas& arestasOrigem = listaAdjacencia[verticeOrigem];
-  arestasOrigem.erase(novaAresta); // Remove a aresta antiga (se existir)
+  if (!arestasOrigem.erase(novaAresta)) {
+    verticeOrigem->aumentarGrau();
+  } 
 
   // Inserir a nova aresta
   arestasOrigem.insert(novaAresta);
@@ -64,7 +66,9 @@ bool GrafoLista::inserirAresta(const int origem, const int destino, const float 
   if (!ehDirecionado) {
       Aresta arestaInversa(verticeDestino.getRaw(), verticeOrigem.getRaw(), peso);
       ListaArestas& arestasDestino = listaAdjacencia[verticeDestino];
-      arestasDestino.erase(arestaInversa); // Remove a aresta inversa antiga (se existir)
+      if (!arestasDestino.erase(arestaInversa)) {
+        verticeDestino->aumentarGrau();
+      }
       arestasDestino.insert(arestaInversa);
   }
 
@@ -106,7 +110,9 @@ bool GrafoLista::removerAresta(const int origem, const int destino) {
   const Aresta* aresta = buscaAresta(verticeOrigem, destino);
   if (!aresta) return false;
 
-  listaAdjacencia[verticeOrigem].erase(*aresta);
+  if (listaAdjacencia[verticeOrigem].erase(*aresta)) {
+    verticeOrigem->diminuirGrau();
+  }
 
   // Se não for direcionado, remover aresta destino -> origem
   if (!ehDirecionado) {
@@ -114,7 +120,9 @@ bool GrafoLista::removerAresta(const int origem, const int destino) {
       if (verticeDestino) {
           const Aresta* arestaInversa = buscaAresta(verticeDestino, origem);
           if (arestaInversa) {
-              listaAdjacencia[verticeDestino].erase(*arestaInversa);
+            if (listaAdjacencia[verticeDestino].erase(*arestaInversa)) {
+              verticeDestino->diminuirGrau();
+            }
           }
       }
   }
@@ -184,14 +192,15 @@ bool GrafoLista::removerVertice(const int indice) {
 
     // Remover todas as arestas que apontam para este vértice
     for (auto& par : listaAdjacencia) {
-        ListaArestas& arestas = par.second;
-        for (auto it = arestas.begin(); it != arestas.end(); ) {
-            if (it->getDestino()->getIndice() == indice) {
-                it = arestas.erase(it);
-            } else {
-                ++it;
-            }
+      ListaArestas& arestas = par.second;
+      for (auto it = arestas.begin(); it != arestas.end(); ) {
+        if (it->getDestino()->getIndice() == indice) {
+          it->getOrigem()->diminuirGrau();
+          it = arestas.erase(it);
+        } else {
+          ++it;
         }
+      }
     }
 
     // Remover o vértice da lista de adjacência

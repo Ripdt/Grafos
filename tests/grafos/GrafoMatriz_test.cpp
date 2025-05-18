@@ -64,11 +64,15 @@ TEST_F(GrafoMatrizTest, InserirAresta_NaoDirecional_Ponderado)
   EXPECT_TRUE(grafoNaoDirecionalPonderado->inserirAresta(0, 1, 10));
   EXPECT_TRUE(grafoNaoDirecionalPonderado->existeAresta(0, 1));
   EXPECT_EQ(grafoNaoDirecionalPonderado->pesoAresta(0, 1), 10);
+  EXPECT_EQ(grafoNaoDirecionalPonderado->getVertice(0).getGrau(), 1);
+  EXPECT_EQ(grafoNaoDirecionalPonderado->getVertice(1).getGrau(), 1);
 
   grafoNaoDirecionalPonderado->inserirVertice("C");
   EXPECT_TRUE(grafoNaoDirecionalPonderado->inserirAresta(1, 2, 20));
   EXPECT_TRUE(grafoNaoDirecionalPonderado->existeAresta(1, 2));
   EXPECT_EQ(grafoNaoDirecionalPonderado->pesoAresta(1, 2), 20);
+  EXPECT_EQ(grafoNaoDirecionalPonderado->getVertice(1).getGrau(), 2);
+  EXPECT_EQ(grafoNaoDirecionalPonderado->getVertice(2).getGrau(), 1);
 }
 
 //------------------------------------------------------------
@@ -80,10 +84,14 @@ TEST_F(GrafoMatrizTest, RemoverAresta_NaoDirecional_Ponderado)
   grafoNaoDirecionalPonderado->inserirAresta(0, 1, 10);
   EXPECT_TRUE(grafoNaoDirecionalPonderado->removerAresta(0, 1));
   EXPECT_FALSE(grafoNaoDirecionalPonderado->existeAresta(0, 1));
+  EXPECT_EQ(grafoNaoDirecionalPonderado->getVertice(0).getGrau(), 0);
+  EXPECT_EQ(grafoNaoDirecionalPonderado->getVertice(1).getGrau(), 0);
 
   grafoNaoDirecionalPonderado->inserirAresta(0, 1, 15);
   EXPECT_TRUE(grafoNaoDirecionalPonderado->removerAresta(0, 1));
   EXPECT_FALSE(grafoNaoDirecionalPonderado->existeAresta(0, 1));
+  EXPECT_EQ(grafoNaoDirecionalPonderado->getVertice(0).getGrau(), 0);
+  EXPECT_EQ(grafoNaoDirecionalPonderado->getVertice(1).getGrau(), 0);
 }
 
 //------------------------------------------------------------
@@ -334,11 +342,15 @@ TEST_F(GrafoMatrizTest, InserirAresta_Direcional_Ponderado)
   EXPECT_TRUE(grafoDirecionalPonderado->inserirAresta(0, 1, 10));
   EXPECT_TRUE(grafoDirecionalPonderado->existeAresta(0, 1));
   EXPECT_EQ(grafoDirecionalPonderado->pesoAresta(0, 1), 10);
+  EXPECT_EQ(grafoDirecionalPonderado->getVertice(0).getGrau(), 1);
+  EXPECT_EQ(grafoDirecionalPonderado->getVertice(1).getGrau(), 0);
 
   grafoDirecionalPonderado->inserirVertice("C");
   EXPECT_TRUE(grafoDirecionalPonderado->inserirAresta(1, 2, 20));
   EXPECT_TRUE(grafoDirecionalPonderado->existeAresta(1, 2));
   EXPECT_EQ(grafoDirecionalPonderado->pesoAresta(1, 2), 20);
+  EXPECT_EQ(grafoDirecionalPonderado->getVertice(1).getGrau(), 1);
+  EXPECT_EQ(grafoDirecionalPonderado->getVertice(2).getGrau(), 0);
 }
 
 //------------------------------------------------------------
@@ -350,10 +362,14 @@ TEST_F(GrafoMatrizTest, RemoverAresta_Direcional_Ponderado)
   grafoDirecionalPonderado->inserirAresta(0, 1, 10);
   EXPECT_TRUE(grafoDirecionalPonderado->removerAresta(0, 1));
   EXPECT_FALSE(grafoDirecionalPonderado->existeAresta(0, 1));
+  EXPECT_EQ(grafoDirecionalPonderado->getVertice(0).getGrau(), 0);
+  EXPECT_EQ(grafoDirecionalPonderado->getVertice(1).getGrau(), 0);
 
   grafoDirecionalPonderado->inserirAresta(0, 1, 15);
   EXPECT_TRUE(grafoDirecionalPonderado->removerAresta(0, 1));
   EXPECT_FALSE(grafoDirecionalPonderado->existeAresta(0, 1));
+  EXPECT_EQ(grafoDirecionalPonderado->getVertice(0).getGrau(), 0);
+  EXPECT_EQ(grafoDirecionalPonderado->getVertice(1).getGrau(), 0);
 }
 
 //------------------------------------------------------------

@@ -30,50 +30,56 @@ public:
 
   bool inserirVertice(
     const std::string label
-  );
+  ) override;
 
   bool removerVertice(
     const int indice
-  );
+  ) override;
 
   std::string labelVertice(
     const int indice
-  );
+  ) const override;
 
-  void imprime();
+  void imprime() const override;
 
   bool inserirAresta(
     const int origem,
     const int destino,
-    const int peso = 1
-  );
+    const float peso = 1.f
+  ) override;
 
   bool removerAresta(
     const int origem,
     const int destino
-  );
+  ) override;
 
   bool existeAresta(
     const int origem,
     const int destino
-  );
+  ) const override;
 
-  int pesoAresta(
+  float pesoAresta(
     const int origem,
     const int destino
-  );
+  ) const override;
 
   std::vector<Vertice> vizinhosVertice(
     const int indice
-  );
+  ) const override;
+
+  const Vertice& getVertice(
+    const size_t indice
+  ) const override;
+
+  size_t numeroVertices() const override;
 
 private:
-  Pointer<Vertice> buscaVertice(const int indice) const;
+  Pointer<Vertice> buscaVertice(const size_t indice) const;
 
   const Aresta* buscaAresta(
     const Pointer<Vertice>& origem,
     const int destino
-  );
+  ) const;
 };
 
 //------------------------------------------------------------

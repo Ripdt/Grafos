@@ -10,142 +10,150 @@
 
 void GrafoMatrizTest::SetUp()
 {
-  grafo = new GrafoMatriz(false, true);
+  grafoNaoDirecionalPonderado = new GrafoMatriz(false, true);
+  grafoNaoDirecionalNaoPonderado = new GrafoMatriz(false, false);
+  grafoDirecionalPonderado = new GrafoMatriz(true, true);
+  grafoDirecionalNaoPonderado = new GrafoMatriz(true, false);
 }
 
 //------------------------------------------------------------
 
 void GrafoMatrizTest::TearDown()
 {
-  delete grafo;
+  delete grafoNaoDirecionalPonderado;
+  delete grafoNaoDirecionalNaoPonderado;
+  delete grafoDirecionalPonderado;
+  delete grafoDirecionalNaoPonderado;
 }
 
+#ifndef TEST_GRAFO_MATRIZ_NAO_DIRECIONAL_PONDERADO
+
 //------------------------------------------------------------
-// Tests
+// TEST_GRAFO_MATRIZ_NAO_DIRECIONAL_PONDERADO 
 //------------------------------------------------------------
 
-TEST_F(GrafoMatrizTest, InserirVertice)
+TEST_F(GrafoMatrizTest, InserirVertice_NaoDirecional_Ponderado)
 {
-  EXPECT_TRUE(grafo->inserirVertice("A"));
-  EXPECT_EQ(grafo->labelVertice(0), "A");
+  EXPECT_TRUE(grafoNaoDirecionalPonderado->inserirVertice("A"));
+  EXPECT_EQ(grafoNaoDirecionalPonderado->labelVertice(0), "A");
 
-  EXPECT_TRUE(grafo->inserirVertice("B"));
-  EXPECT_EQ(grafo->labelVertice(1), "B");
-}
-
-//------------------------------------------------------------
-
-TEST_F(GrafoMatrizTest, RemoverVertice)
-{
-  grafo->inserirVertice("A");
-  grafo->inserirVertice("B");
-  EXPECT_TRUE(grafo->removerVertice(0));
-  EXPECT_EQ(grafo->labelVertice(0), "B");
-
-  grafo->inserirVertice("C");
-  EXPECT_TRUE(grafo->removerVertice(1));
-  EXPECT_EQ(grafo->labelVertice(0), "B");
+  EXPECT_TRUE(grafoNaoDirecionalPonderado->inserirVertice("B"));
+  EXPECT_EQ(grafoNaoDirecionalPonderado->labelVertice(1), "B");
 }
 
 //------------------------------------------------------------
 
-TEST_F(GrafoMatrizTest, InserirAresta)
+TEST_F(GrafoMatrizTest, RemoverVertice_NaoDirecional_Ponderado)
 {
-  grafo->inserirVertice("A");
-  grafo->inserirVertice("B");
-  EXPECT_TRUE(grafo->inserirAresta(0, 1, 10));
-  EXPECT_TRUE(grafo->existeAresta(0, 1));
-  EXPECT_EQ(grafo->pesoAresta(0, 1), 10);
+  grafoNaoDirecionalPonderado->inserirVertice("A");
+  grafoNaoDirecionalPonderado->inserirVertice("B");
+  EXPECT_TRUE(grafoNaoDirecionalPonderado->removerVertice(0));
+  EXPECT_EQ(grafoNaoDirecionalPonderado->labelVertice(0), "B");
 
-  grafo->inserirVertice("C");
-  EXPECT_TRUE(grafo->inserirAresta(1, 2, 20));
-  EXPECT_TRUE(grafo->existeAresta(1, 2));
-  EXPECT_EQ(grafo->pesoAresta(1, 2), 20);
+  grafoNaoDirecionalPonderado->inserirVertice("C");
+  EXPECT_TRUE(grafoNaoDirecionalPonderado->removerVertice(1));
+  EXPECT_EQ(grafoNaoDirecionalPonderado->labelVertice(0), "B");
 }
 
 //------------------------------------------------------------
 
-TEST_F(GrafoMatrizTest, RemoverAresta)
+TEST_F(GrafoMatrizTest, InserirAresta_NaoDirecional_Ponderado)
 {
-  grafo->inserirVertice("A");
-  grafo->inserirVertice("B");
-  grafo->inserirAresta(0, 1, 10);
-  EXPECT_TRUE(grafo->removerAresta(0, 1));
-  EXPECT_FALSE(grafo->existeAresta(0, 1));
+  grafoNaoDirecionalPonderado->inserirVertice("A");
+  grafoNaoDirecionalPonderado->inserirVertice("B");
+  EXPECT_TRUE(grafoNaoDirecionalPonderado->inserirAresta(0, 1, 10));
+  EXPECT_TRUE(grafoNaoDirecionalPonderado->existeAresta(0, 1));
+  EXPECT_EQ(grafoNaoDirecionalPonderado->pesoAresta(0, 1), 10);
 
-  grafo->inserirAresta(0, 1, 15);
-  EXPECT_TRUE(grafo->removerAresta(0, 1));
-  EXPECT_FALSE(grafo->existeAresta(0, 1));
+  grafoNaoDirecionalPonderado->inserirVertice("C");
+  EXPECT_TRUE(grafoNaoDirecionalPonderado->inserirAresta(1, 2, 20));
+  EXPECT_TRUE(grafoNaoDirecionalPonderado->existeAresta(1, 2));
+  EXPECT_EQ(grafoNaoDirecionalPonderado->pesoAresta(1, 2), 20);
 }
 
 //------------------------------------------------------------
 
-TEST_F(GrafoMatrizTest, ExisteAresta)
+TEST_F(GrafoMatrizTest, RemoverAresta_NaoDirecional_Ponderado)
 {
-  grafo->inserirVertice("A");
-  grafo->inserirVertice("B");
-  grafo->inserirAresta(0, 1, 10);
-  EXPECT_TRUE(grafo->existeAresta(0, 1));
+  grafoNaoDirecionalPonderado->inserirVertice("A");
+  grafoNaoDirecionalPonderado->inserirVertice("B");
+  grafoNaoDirecionalPonderado->inserirAresta(0, 1, 10);
+  EXPECT_TRUE(grafoNaoDirecionalPonderado->removerAresta(0, 1));
+  EXPECT_FALSE(grafoNaoDirecionalPonderado->existeAresta(0, 1));
 
-  grafo->removerAresta(0, 1);
-  EXPECT_FALSE(grafo->existeAresta(0, 1));
+  grafoNaoDirecionalPonderado->inserirAresta(0, 1, 15);
+  EXPECT_TRUE(grafoNaoDirecionalPonderado->removerAresta(0, 1));
+  EXPECT_FALSE(grafoNaoDirecionalPonderado->existeAresta(0, 1));
 }
 
 //------------------------------------------------------------
 
-TEST_F(GrafoMatrizTest, PesoAresta)
+TEST_F(GrafoMatrizTest, ExisteAresta_NaoDirecional_Ponderado)
 {
-  grafo->inserirVertice("A");
-  grafo->inserirVertice("B");
-  grafo->inserirAresta(0, 1, 10);
-  EXPECT_EQ(grafo->pesoAresta(0, 1), 10);
+  grafoNaoDirecionalPonderado->inserirVertice("A");
+  grafoNaoDirecionalPonderado->inserirVertice("B");
+  grafoNaoDirecionalPonderado->inserirAresta(0, 1, 10);
+  EXPECT_TRUE(grafoNaoDirecionalPonderado->existeAresta(0, 1));
 
-  grafo->inserirAresta(0, 1, 20);
-  EXPECT_EQ(grafo->pesoAresta(0, 1), 20);
+  grafoNaoDirecionalPonderado->removerAresta(0, 1);
+  EXPECT_FALSE(grafoNaoDirecionalPonderado->existeAresta(0, 1));
 }
 
 //------------------------------------------------------------
 
-TEST_F(GrafoMatrizTest, VizinhosVertice)
+TEST_F(GrafoMatrizTest, PesoAresta_NaoDirecional_Ponderado)
 {
-  grafo->inserirVertice("A");
-  grafo->inserirVertice("B");
-  grafo->inserirVertice("C");
-  grafo->inserirAresta(0, 1, 10);
-  grafo->inserirAresta(0, 2, 20);
+  grafoNaoDirecionalPonderado->inserirVertice("A");
+  grafoNaoDirecionalPonderado->inserirVertice("B");
+  grafoNaoDirecionalPonderado->inserirAresta(0, 1, 10);
+  EXPECT_EQ(grafoNaoDirecionalPonderado->pesoAresta(0, 1), 10);
 
-  std::vector<Vertice> vizinhos = grafo->vizinhosVertice(0);
+  grafoNaoDirecionalPonderado->inserirAresta(0, 1, 20);
+  EXPECT_EQ(grafoNaoDirecionalPonderado->pesoAresta(0, 1), 20);
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, VizinhosVertice_NaoDirecional_Ponderado)
+{
+  grafoNaoDirecionalPonderado->inserirVertice("A");
+  grafoNaoDirecionalPonderado->inserirVertice("B");
+  grafoNaoDirecionalPonderado->inserirVertice("C");
+  grafoNaoDirecionalPonderado->inserirAresta(0, 1, 10);
+  grafoNaoDirecionalPonderado->inserirAresta(0, 2, 20);
+
+  std::vector<Vertice> vizinhos = grafoNaoDirecionalPonderado->vizinhosVertice(0);
   ASSERT_EQ(vizinhos.size(), 2);
   EXPECT_STREQ(vizinhos[0].getLabel().c_str(), "B");
   EXPECT_STREQ(vizinhos[1].getLabel().c_str(), "C");
 
-  grafo->removerAresta(0, 1);
-  vizinhos = grafo->vizinhosVertice(0);
+  grafoNaoDirecionalPonderado->removerAresta(0, 1);
+  vizinhos = grafoNaoDirecionalPonderado->vizinhosVertice(0);
   ASSERT_EQ(vizinhos.size(), 1);
   EXPECT_STREQ(vizinhos[0].getLabel().c_str(), "C");
 }
 
 //------------------------------------------------------------
 
-TEST_F(GrafoMatrizTest, LabelVertice)
+TEST_F(GrafoMatrizTest, LabelVertice_NaoDirecional_Ponderado)
 {
-  grafo->inserirVertice("A");
-  EXPECT_EQ(grafo->labelVertice(0), "A");
+  grafoNaoDirecionalPonderado->inserirVertice("A");
+  EXPECT_EQ(grafoNaoDirecionalPonderado->labelVertice(0), "A");
 
-  grafo->inserirVertice("B");
-  EXPECT_EQ(grafo->labelVertice(1), "B");
+  grafoNaoDirecionalPonderado->inserirVertice("B");
+  EXPECT_EQ(grafoNaoDirecionalPonderado->labelVertice(1), "B");
 }
 
 //------------------------------------------------------------
 
-TEST_F(GrafoMatrizTest, Imprime)
+TEST_F(GrafoMatrizTest, Imprime_NaoDirecional_Ponderado)
 {
-  grafo->inserirVertice("A");
-  grafo->inserirVertice("B");
-  grafo->inserirAresta(0, 1, 10);
+  grafoNaoDirecionalPonderado->inserirVertice("A");
+  grafoNaoDirecionalPonderado->inserirVertice("B");
+  grafoNaoDirecionalPonderado->inserirAresta(0, 1, 10);
 
   testing::internal::CaptureStdout();
-  grafo->imprime();
+  grafoNaoDirecionalPonderado->imprime();
   std::string output = testing::internal::GetCapturedStdout();
 
   EXPECT_NE(output.find("A"), std::string::npos);
@@ -154,3 +162,410 @@ TEST_F(GrafoMatrizTest, Imprime)
 }
 
 //------------------------------------------------------------
+
+#endif
+
+#ifndef TEST_GRAFO_MATRIZ_NAO_DIRECIONAL_NAO_PONDERADO
+
+TEST_F(GrafoMatrizTest, InserirVertice_NaoDirecional_NaoPonderado)
+{
+  EXPECT_TRUE(grafoNaoDirecionalNaoPonderado->inserirVertice("A"));
+  EXPECT_EQ(grafoNaoDirecionalNaoPonderado->labelVertice(0), "A");
+
+  EXPECT_TRUE(grafoNaoDirecionalNaoPonderado->inserirVertice("B"));
+  EXPECT_EQ(grafoNaoDirecionalNaoPonderado->labelVertice(1), "B");
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, RemoverVertice_NaoDirecional_NaoPonderado)
+{
+  grafoNaoDirecionalNaoPonderado->inserirVertice("A");
+  grafoNaoDirecionalNaoPonderado->inserirVertice("B");
+  EXPECT_TRUE(grafoNaoDirecionalNaoPonderado->removerVertice(0));
+  EXPECT_EQ(grafoNaoDirecionalNaoPonderado->labelVertice(0), "B");
+
+  grafoNaoDirecionalNaoPonderado->inserirVertice("C");
+  EXPECT_TRUE(grafoNaoDirecionalNaoPonderado->removerVertice(1));
+  EXPECT_EQ(grafoNaoDirecionalNaoPonderado->labelVertice(0), "B");
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, InserirAresta_NaoDirecional_NaoPonderado)
+{
+  grafoNaoDirecionalNaoPonderado->inserirVertice("A");
+  grafoNaoDirecionalNaoPonderado->inserirVertice("B");
+  EXPECT_TRUE(grafoNaoDirecionalNaoPonderado->inserirAresta(0, 1, 10));
+  EXPECT_TRUE(grafoNaoDirecionalNaoPonderado->existeAresta(0, 1));
+  EXPECT_EQ(grafoNaoDirecionalNaoPonderado->pesoAresta(0, 1), 1);
+
+  grafoNaoDirecionalNaoPonderado->inserirVertice("C");
+  EXPECT_TRUE(grafoNaoDirecionalNaoPonderado->inserirAresta(1, 2, 20));
+  EXPECT_TRUE(grafoNaoDirecionalNaoPonderado->existeAresta(1, 2));
+  EXPECT_EQ(grafoNaoDirecionalNaoPonderado->pesoAresta(1, 2), 1);
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, RemoverAresta_NaoDirecional_NaoPonderado)
+{
+  grafoNaoDirecionalNaoPonderado->inserirVertice("A");
+  grafoNaoDirecionalNaoPonderado->inserirVertice("B");
+  grafoNaoDirecionalNaoPonderado->inserirAresta(0, 1, 10);
+  EXPECT_TRUE(grafoNaoDirecionalNaoPonderado->removerAresta(0, 1));
+  EXPECT_FALSE(grafoNaoDirecionalNaoPonderado->existeAresta(0, 1));
+
+  grafoNaoDirecionalNaoPonderado->inserirAresta(0, 1, 15);
+  EXPECT_TRUE(grafoNaoDirecionalNaoPonderado->removerAresta(0, 1));
+  EXPECT_FALSE(grafoNaoDirecionalNaoPonderado->existeAresta(0, 1));
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, ExisteAresta_NaoDirecional_NaoPonderado)
+{
+  grafoNaoDirecionalNaoPonderado->inserirVertice("A");
+  grafoNaoDirecionalNaoPonderado->inserirVertice("B");
+  grafoNaoDirecionalNaoPonderado->inserirAresta(0, 1, 10);
+  EXPECT_TRUE(grafoNaoDirecionalNaoPonderado->existeAresta(0, 1));
+
+  grafoNaoDirecionalNaoPonderado->removerAresta(0, 1);
+  EXPECT_FALSE(grafoNaoDirecionalNaoPonderado->existeAresta(0, 1));
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, PesoAresta_NaoDirecional_NaoPonderado)
+{
+  grafoNaoDirecionalNaoPonderado->inserirVertice("A");
+  grafoNaoDirecionalNaoPonderado->inserirVertice("B");
+  grafoNaoDirecionalNaoPonderado->inserirAresta(0, 1, 10);
+  EXPECT_EQ(grafoNaoDirecionalNaoPonderado->pesoAresta(0, 1), 1);
+
+  grafoNaoDirecionalNaoPonderado->inserirAresta(0, 1, 20);
+  EXPECT_EQ(grafoNaoDirecionalNaoPonderado->pesoAresta(0, 1), 1);
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, VizinhosVertice_NaoDirecional_NaoPonderado)
+{
+  grafoNaoDirecionalNaoPonderado->inserirVertice("A");
+  grafoNaoDirecionalNaoPonderado->inserirVertice("B");
+  grafoNaoDirecionalNaoPonderado->inserirVertice("C");
+  grafoNaoDirecionalNaoPonderado->inserirAresta(0, 1, 10);
+  grafoNaoDirecionalNaoPonderado->inserirAresta(0, 2, 20);
+
+  std::vector<Vertice> vizinhos = grafoNaoDirecionalNaoPonderado->vizinhosVertice(0);
+  ASSERT_EQ(vizinhos.size(), 2);
+  EXPECT_STREQ(vizinhos[0].getLabel().c_str(), "B");
+  EXPECT_STREQ(vizinhos[1].getLabel().c_str(), "C");
+
+  grafoNaoDirecionalNaoPonderado->removerAresta(0, 1);
+  vizinhos = grafoNaoDirecionalNaoPonderado->vizinhosVertice(0);
+  ASSERT_EQ(vizinhos.size(), 1);
+  EXPECT_STREQ(vizinhos[0].getLabel().c_str(), "C");
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, LabelVertice_NaoDirecional_NaoPonderado)
+{
+  grafoNaoDirecionalNaoPonderado->inserirVertice("A");
+  EXPECT_EQ(grafoNaoDirecionalNaoPonderado->labelVertice(0), "A");
+
+  grafoNaoDirecionalNaoPonderado->inserirVertice("B");
+  EXPECT_EQ(grafoNaoDirecionalNaoPonderado->labelVertice(1), "B");
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, Imprime_NaoDirecional_NaoPonderado)
+{
+  grafoNaoDirecionalNaoPonderado->inserirVertice("A");
+  grafoNaoDirecionalNaoPonderado->inserirVertice("B");
+  grafoNaoDirecionalNaoPonderado->inserirAresta(0, 1, 10);
+
+  testing::internal::CaptureStdout();
+  grafoNaoDirecionalNaoPonderado->imprime();
+  std::string output = testing::internal::GetCapturedStdout();
+
+  EXPECT_NE(output.find("A"), std::string::npos);
+  EXPECT_NE(output.find("B"), std::string::npos);
+  EXPECT_NE(output.find("1"), std::string::npos);
+}
+
+//------------------------------------------------------------
+
+#endif
+
+#ifndef TEST_GRAFO_MATRIZ_DIRECIONAL_PONDERADO
+
+TEST_F(GrafoMatrizTest, InserirVertice_Direcional_Ponderado)
+{
+  EXPECT_TRUE(grafoDirecionalPonderado->inserirVertice("A"));
+  EXPECT_EQ(grafoDirecionalPonderado->labelVertice(0), "A");
+
+  EXPECT_TRUE(grafoDirecionalPonderado->inserirVertice("B"));
+  EXPECT_EQ(grafoDirecionalPonderado->labelVertice(1), "B");
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, RemoverVertice_Direcional_Ponderado)
+{
+  grafoDirecionalPonderado->inserirVertice("A");
+  grafoDirecionalPonderado->inserirVertice("B");
+  EXPECT_TRUE(grafoDirecionalPonderado->removerVertice(0));
+  EXPECT_EQ(grafoDirecionalPonderado->labelVertice(0), "B");
+
+  grafoDirecionalPonderado->inserirVertice("C");
+  EXPECT_TRUE(grafoDirecionalPonderado->removerVertice(1));
+  EXPECT_EQ(grafoDirecionalPonderado->labelVertice(0), "B");
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, InserirAresta_Direcional_Ponderado)
+{
+  grafoDirecionalPonderado->inserirVertice("A");
+  grafoDirecionalPonderado->inserirVertice("B");
+  EXPECT_TRUE(grafoDirecionalPonderado->inserirAresta(0, 1, 10));
+  EXPECT_TRUE(grafoDirecionalPonderado->existeAresta(0, 1));
+  EXPECT_EQ(grafoDirecionalPonderado->pesoAresta(0, 1), 10);
+
+  grafoDirecionalPonderado->inserirVertice("C");
+  EXPECT_TRUE(grafoDirecionalPonderado->inserirAresta(1, 2, 20));
+  EXPECT_TRUE(grafoDirecionalPonderado->existeAresta(1, 2));
+  EXPECT_EQ(grafoDirecionalPonderado->pesoAresta(1, 2), 20);
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, RemoverAresta_Direcional_Ponderado)
+{
+  grafoDirecionalPonderado->inserirVertice("A");
+  grafoDirecionalPonderado->inserirVertice("B");
+  grafoDirecionalPonderado->inserirAresta(0, 1, 10);
+  EXPECT_TRUE(grafoDirecionalPonderado->removerAresta(0, 1));
+  EXPECT_FALSE(grafoDirecionalPonderado->existeAresta(0, 1));
+
+  grafoDirecionalPonderado->inserirAresta(0, 1, 15);
+  EXPECT_TRUE(grafoDirecionalPonderado->removerAresta(0, 1));
+  EXPECT_FALSE(grafoDirecionalPonderado->existeAresta(0, 1));
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, ExisteAresta_Direcional_Ponderado)
+{
+  grafoDirecionalPonderado->inserirVertice("A");
+  grafoDirecionalPonderado->inserirVertice("B");
+  grafoDirecionalPonderado->inserirAresta(0, 1, 10);
+  EXPECT_TRUE(grafoDirecionalPonderado->existeAresta(0, 1));
+
+  grafoDirecionalPonderado->removerAresta(0, 1);
+  EXPECT_FALSE(grafoDirecionalPonderado->existeAresta(0, 1));
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, PesoAresta_Direcional_Ponderado)
+{
+  grafoDirecionalPonderado->inserirVertice("A");
+  grafoDirecionalPonderado->inserirVertice("B");
+  grafoDirecionalPonderado->inserirAresta(0, 1, 10);
+  EXPECT_EQ(grafoDirecionalPonderado->pesoAresta(0, 1), 10);
+
+  grafoDirecionalPonderado->inserirAresta(0, 1, 20);
+  EXPECT_EQ(grafoDirecionalPonderado->pesoAresta(0, 1), 20);
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, VizinhosVertice_Direcional_Ponderado)
+{
+  grafoDirecionalPonderado->inserirVertice("A");
+  grafoDirecionalPonderado->inserirVertice("B");
+  grafoDirecionalPonderado->inserirVertice("C");
+  grafoDirecionalPonderado->inserirAresta(0, 1, 10);
+  grafoDirecionalPonderado->inserirAresta(0, 2, 20);
+
+  std::vector<Vertice> vizinhos = grafoDirecionalPonderado->vizinhosVertice(0);
+  ASSERT_EQ(vizinhos.size(), 2);
+  EXPECT_STREQ(vizinhos[0].getLabel().c_str(), "B");
+  EXPECT_STREQ(vizinhos[1].getLabel().c_str(), "C");
+
+  grafoDirecionalPonderado->removerAresta(0, 1);
+  vizinhos = grafoDirecionalPonderado->vizinhosVertice(0);
+  ASSERT_EQ(vizinhos.size(), 1);
+  EXPECT_STREQ(vizinhos[0].getLabel().c_str(), "C");
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, LabelVertice_Direcional_Ponderado)
+{
+  grafoDirecionalPonderado->inserirVertice("A");
+  EXPECT_EQ(grafoDirecionalPonderado->labelVertice(0), "A");
+
+  grafoDirecionalPonderado->inserirVertice("B");
+  EXPECT_EQ(grafoDirecionalPonderado->labelVertice(1), "B");
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, Imprime_Direcional_Ponderado)
+{
+  grafoDirecionalPonderado->inserirVertice("A");
+  grafoDirecionalPonderado->inserirVertice("B");
+  grafoDirecionalPonderado->inserirAresta(0, 1, 10);
+
+  testing::internal::CaptureStdout();
+  grafoDirecionalPonderado->imprime();
+  std::string output = testing::internal::GetCapturedStdout();
+
+  EXPECT_NE(output.find("A"), std::string::npos);
+  EXPECT_NE(output.find("B"), std::string::npos);
+  EXPECT_NE(output.find("10"), std::string::npos);
+}
+
+//------------------------------------------------------------
+
+#endif
+
+#ifndef TEST_GRAFO_MATRIZ_DIRECIONAL_NAO_PONDERADO
+
+TEST_F(GrafoMatrizTest, InserirVertice_Direcional_NaoPonderado)
+{
+  EXPECT_TRUE(grafoDirecionalNaoPonderado->inserirVertice("A"));
+  EXPECT_EQ(grafoDirecionalNaoPonderado->labelVertice(0), "A");
+
+  EXPECT_TRUE(grafoDirecionalNaoPonderado->inserirVertice("B"));
+  EXPECT_EQ(grafoDirecionalNaoPonderado->labelVertice(1), "B");
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, RemoverVertice_Direcional_NaoPonderado)
+{
+  grafoDirecionalNaoPonderado->inserirVertice("A");
+  grafoDirecionalNaoPonderado->inserirVertice("B");
+  EXPECT_TRUE(grafoDirecionalNaoPonderado->removerVertice(0));
+  EXPECT_EQ(grafoDirecionalNaoPonderado->labelVertice(0), "B");
+
+  grafoDirecionalNaoPonderado->inserirVertice("C");
+  EXPECT_TRUE(grafoDirecionalNaoPonderado->removerVertice(1));
+  EXPECT_EQ(grafoDirecionalNaoPonderado->labelVertice(0), "B");
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, InserirAresta_Direcional_NaoPonderado)
+{
+  grafoDirecionalNaoPonderado->inserirVertice("A");
+  grafoDirecionalNaoPonderado->inserirVertice("B");
+  EXPECT_TRUE(grafoDirecionalNaoPonderado->inserirAresta(0, 1, 10));
+  EXPECT_TRUE(grafoDirecionalNaoPonderado->existeAresta(0, 1));
+  EXPECT_EQ(grafoDirecionalNaoPonderado->pesoAresta(0, 1), 1);
+
+  grafoDirecionalNaoPonderado->inserirVertice("C");
+  EXPECT_TRUE(grafoDirecionalNaoPonderado->inserirAresta(1, 2, 20));
+  EXPECT_TRUE(grafoDirecionalNaoPonderado->existeAresta(1, 2));
+  EXPECT_EQ(grafoDirecionalNaoPonderado->pesoAresta(1, 2), 1);
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, RemoverAresta_Direcional_NaoPonderado)
+{
+  grafoDirecionalNaoPonderado->inserirVertice("A");
+  grafoDirecionalNaoPonderado->inserirVertice("B");
+  grafoDirecionalNaoPonderado->inserirAresta(0, 1, 10);
+  EXPECT_TRUE(grafoDirecionalNaoPonderado->removerAresta(0, 1));
+  EXPECT_FALSE(grafoDirecionalNaoPonderado->existeAresta(0, 1));
+
+  grafoDirecionalNaoPonderado->inserirAresta(0, 1, 15);
+  EXPECT_TRUE(grafoDirecionalNaoPonderado->removerAresta(0, 1));
+  EXPECT_FALSE(grafoDirecionalNaoPonderado->existeAresta(0, 1));
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, ExisteAresta_Direcional_NaoPonderado)
+{
+  grafoDirecionalNaoPonderado->inserirVertice("A");
+  grafoDirecionalNaoPonderado->inserirVertice("B");
+  grafoDirecionalNaoPonderado->inserirAresta(0, 1, 10);
+  EXPECT_TRUE(grafoDirecionalNaoPonderado->existeAresta(0, 1));
+
+  grafoDirecionalNaoPonderado->removerAresta(0, 1);
+  EXPECT_FALSE(grafoDirecionalNaoPonderado->existeAresta(0, 1));
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, PesoAresta_Direcional_NaoPonderado)
+{
+  grafoDirecionalNaoPonderado->inserirVertice("A");
+  grafoDirecionalNaoPonderado->inserirVertice("B");
+  grafoDirecionalNaoPonderado->inserirAresta(0, 1, 10);
+  EXPECT_EQ(grafoDirecionalNaoPonderado->pesoAresta(0, 1), 1);
+
+  grafoDirecionalNaoPonderado->inserirAresta(0, 1, 20);
+  EXPECT_EQ(grafoDirecionalNaoPonderado->pesoAresta(0, 1), 1);
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, VizinhosVertice_Direcional_NaoPonderado)
+{
+  grafoDirecionalNaoPonderado->inserirVertice("A");
+  grafoDirecionalNaoPonderado->inserirVertice("B");
+  grafoDirecionalNaoPonderado->inserirVertice("C");
+  grafoDirecionalNaoPonderado->inserirAresta(0, 1, 10);
+  grafoDirecionalNaoPonderado->inserirAresta(0, 2, 20);
+
+  std::vector<Vertice> vizinhos = grafoDirecionalNaoPonderado->vizinhosVertice(0);
+  ASSERT_EQ(vizinhos.size(), 2);
+  EXPECT_STREQ(vizinhos[0].getLabel().c_str(), "B");
+  EXPECT_STREQ(vizinhos[1].getLabel().c_str(), "C");
+
+  grafoDirecionalNaoPonderado->removerAresta(0, 1);
+  vizinhos = grafoDirecionalNaoPonderado->vizinhosVertice(0);
+  ASSERT_EQ(vizinhos.size(), 1);
+  EXPECT_STREQ(vizinhos[0].getLabel().c_str(), "C");
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, LabelVertice_Direcional_NaoPonderado)
+{
+  grafoDirecionalNaoPonderado->inserirVertice("A");
+  EXPECT_EQ(grafoDirecionalNaoPonderado->labelVertice(0), "A");
+
+  grafoDirecionalNaoPonderado->inserirVertice("B");
+  EXPECT_EQ(grafoDirecionalNaoPonderado->labelVertice(1), "B");
+}
+
+//------------------------------------------------------------
+
+TEST_F(GrafoMatrizTest, Imprime_Direcional_NaoPonderado)
+{
+  grafoDirecionalNaoPonderado->inserirVertice("A");
+  grafoDirecionalNaoPonderado->inserirVertice("B");
+  grafoDirecionalNaoPonderado->inserirAresta(0, 1, 10);
+
+  testing::internal::CaptureStdout();
+  grafoDirecionalNaoPonderado->imprime();
+  std::string output = testing::internal::GetCapturedStdout();
+
+  EXPECT_NE(output.find("A"), std::string::npos);
+  EXPECT_NE(output.find("B"), std::string::npos);
+  EXPECT_NE(output.find("1"), std::string::npos);
+}
+
+//------------------------------------------------------------
+
+#endif

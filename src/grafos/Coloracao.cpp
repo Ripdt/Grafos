@@ -76,14 +76,7 @@ bool Coloracao::proximaCombinacao(std::vector<int>& corPorIndice, int numCores) 
 
 void Coloracao::colorir_WelshPowell() const
 {
-  std::list<Vertice*> vertices;
-  for (int i = 0; i < grafo.numeroVertices(); i++) {
-    vertices.push_back(grafo.getVertice(i));
-  }
-  vertices.sort([&](Vertice* v1, Vertice* v2) {
-    return v1->getGrau() > v2->getGrau();
-  });
-
+  std::list<Vertice*> vertices = verticesOrdenadosPorGrau();
   int cor = vertices.size();
   while (!vertices.empty()) {
     Vertice* v = vertices.front();
@@ -103,6 +96,62 @@ void Coloracao::colorir_WelshPowell() const
       cor--;
     }
   }
+}
+
+//------------------------------------------------------------
+
+std::list<Vertice*> Coloracao::verticesOrdenadosPorGrau() const
+{
+  std::list<Vertice*> vertices;
+  for (int i = 0; i < grafo.numeroVertices(); i++) {
+    vertices.push_back(grafo.getVertice(i));
+  }
+  vertices.sort([&](Vertice* v1, Vertice* v2) {
+    return v1->getGrau() > v2->getGrau();
+  });
+
+  return vertices;
+}
+
+//------------------------------------------------------------
+
+void Coloracao::colorir_DSatur() const
+{
+  std::list<Vertice*> vertices = verticesOrdenadosPorGrau();
+  int cor = vertices.size();
+
+  while (!vertices.empty()) {
+    Vertice* v = verticeComMaiorSaturacao(vertices);
+    v->setCor(cor);
+
+    std::vector<Vertice*> vizinhos = std::move(grafo.vizinhosVertice(v->getIndice()));
+    for (Vertice* vizinho : vizinhos) {
+      vizinho->aumentarSaturacao();
+    }
+
+    if (!vizinhos.empty()) {
+      cor--;
+    }
+
+    vertices.remove(v);
+  }
+}
+
+//------------------------------------------------------------
+
+Vertice* Coloracao::verticeComMaiorSaturacao(
+  const std::list<Vertice*>& vertices
+) const
+{
+  Vertice* verticeMaiorSaturacao = nullptr;
+  int maiorSaturacao = -1;
+  for (Vertice* v : vertices) {
+    if (v->getSaturacao() > maiorSaturacao) {
+      maiorSaturacao = v->getSaturacao();
+      verticeMaiorSaturacao = v;
+    }
+  }
+  return verticeMaiorSaturacao;
 }
 
 //------------------------------------------------------------

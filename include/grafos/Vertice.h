@@ -9,6 +9,7 @@ private:
   int indice;
   int cor = -1;
   int grau = 0;
+  int saturacao = 0;
   std::string label;
 
 public:
@@ -37,6 +38,9 @@ public:
   void aumentarGrau();
   void diminuirGrau();
   int getGrau() const;
+
+  void aumentarSaturacao();
+  int getSaturacao() const;
 };
 
 #endif

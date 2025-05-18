@@ -61,11 +61,11 @@ public:
     const int destino
   ) const override;
 
-  std::vector<Vertice> vizinhosVertice(
+  std::vector<Vertice*> vizinhosVertice(
     const int indice
   ) const override;
 
-  const Vertice& getVertice(
+  Vertice* getVertice(
     const size_t indice
   ) const override;
 

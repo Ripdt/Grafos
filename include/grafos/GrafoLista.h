@@ -12,8 +12,8 @@
 //------------------------------------------------------------
 
 typedef std::set<Aresta> ListaArestas;
-typedef std::pair<Pointer<Vertice>, ListaArestas> ArestasPorVertice;
-typedef std::map<Pointer<Vertice>, ListaArestas> ListaAdjacencia;
+typedef std::map<Vertice*, ListaArestas> ListaAdjacencia;
+typedef std::vector<Pointer<Vertice>> Vertices;
 
 //------------------------------------------------------------
 
@@ -21,6 +21,7 @@ class GrafoLista : public Grafo
 {
 private:
   ListaAdjacencia listaAdjacencia;
+  Vertices vertices;
 public:
   GrafoLista(
     const bool _ehDirecionado,
@@ -64,21 +65,21 @@ public:
     const int destino
   ) const override;
 
-  std::vector<Vertice> vizinhosVertice(
+  std::vector<Vertice*> vizinhosVertice(
     const int indice
   ) const override;
 
-  const Vertice& getVertice(
+  Vertice* getVertice(
     const size_t indice
   ) const override;
 
   size_t numeroVertices() const override;
 
 private:
-  Pointer<Vertice> buscaVertice(const size_t indice) const;
+  Vertice* buscaVertice(const size_t indice) const;
 
   const Aresta* buscaAresta(
-    const Pointer<Vertice>& origem,
+    Vertice* origem,
     const int destino
   ) const;
 };

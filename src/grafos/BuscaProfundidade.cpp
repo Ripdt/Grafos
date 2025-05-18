@@ -15,14 +15,14 @@ std::vector<int> BuscaProfundidade::percorrerTodosOsVertices(
   const int origem
 ) const
 {
-  std::set<Vertice> caminho;
+  std::set<Vertice*> caminho;
   caminho.insert(grafo.getVertice(origem));
 
   percorrerTodosOsVertices(origem, caminho);
 
   std::vector<int> caminhoRetorno;
   for (auto it = caminho.begin(); it != caminho.end(); ++it)
-    caminhoRetorno.push_back(it->getIndice());
+    caminhoRetorno.push_back((*it)->getIndice());
 
   return caminhoRetorno;
 }
@@ -30,7 +30,7 @@ std::vector<int> BuscaProfundidade::percorrerTodosOsVertices(
 
 void BuscaProfundidade::percorrerTodosOsVertices(
   const int origem,
-  std::set<Vertice>& verticesVisitados,
+  std::set<Vertice*>& verticesVisitados,
   const int profundidade
 ) const
 {
@@ -39,12 +39,12 @@ void BuscaProfundidade::percorrerTodosOsVertices(
       std::cout << "\t";
   }
 
-  const Vertice& vertice = grafo.getVertice(origem);
-  std::cout << vertice.getIndice() << " - " << vertice.getLabel() << std::endl;
+  const Vertice* vertice = grafo.getVertice(origem);
+  std::cout << vertice->getIndice() << " - " << vertice->getLabel() << std::endl;
 
-  for (const Vertice& vertice : grafo.vizinhosVertice(origem)) {
+  for (Vertice* vertice : grafo.vizinhosVertice(origem)) {
     auto& resultado = verticesVisitados.insert(vertice);
     if (resultado.second)
-      percorrerTodosOsVertices(vertice.getIndice(), verticesVisitados, profundidade + 1);
+      percorrerTodosOsVertices(vertice->getIndice(), verticesVisitados, profundidade + 1);
   }
 }

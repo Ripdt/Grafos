@@ -29,9 +29,9 @@ TEST_F(AlgoritmoDijkstraTest, TESTA_DIJKSTRA_GRAFO_1)
   EXPECT_FLOAT_EQ(caminhos[2]->distancia, 5.0f);
 
   ASSERT_EQ(caminhos[2]->caminho.size(), 3);
-  EXPECT_EQ(caminhos[2]->caminho[0].getIndice(), 0);
-  EXPECT_EQ(caminhos[2]->caminho[1].getIndice(), 1);
-  EXPECT_EQ(caminhos[2]->caminho[2].getIndice(), 2);
+  EXPECT_EQ(caminhos[2]->caminho[0]->getIndice(), 0);
+  EXPECT_EQ(caminhos[2]->caminho[1]->getIndice(), 1);
+  EXPECT_EQ(caminhos[2]->caminho[2]->getIndice(), 2);
 }
 
 TEST_F(AlgoritmoDijkstraTest, TESTA_DIJKSTRA_VERTICE_ISOLADO)

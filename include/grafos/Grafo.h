@@ -65,13 +65,13 @@ public:
     const int destino
   ) const = 0;
 
-  virtual std::vector<Vertice> vizinhosVertice(
+  virtual std::vector<Vertice*> vizinhosVertice(
     const int indice
   ) const = 0;
 
   virtual size_t numeroVertices() const = 0;
 
-  virtual const Vertice& getVertice(
+  virtual Vertice* getVertice(
     const size_t indice
   ) const = 0;
 };

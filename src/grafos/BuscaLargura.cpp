@@ -17,20 +17,20 @@ std::vector<int> BuscaLargura::caminhoTodosOsVertices(
   const int origem
 ) const
 {
-  std::queue<Vertice> pendentes;
-  std::set<Vertice> visitados;
+  std::queue<Vertice*> pendentes;
+  std::set<Vertice*> visitados;
   std::vector<int> caminho;
 
   pendentes.push(grafo.getVertice(origem));
   visitados.insert(grafo.getVertice(origem));
 
   while (!pendentes.empty()) {
-    const Vertice& vertice = pendentes.front();
-    caminho.push_back(vertice.getIndice());
+    const Vertice* vertice = pendentes.front();
+    caminho.push_back(vertice->getIndice());
 
-    std::cout << vertice.getIndice() << " - " << vertice.getLabel() << std::endl;
+    std::cout << vertice->getIndice() << " - " << vertice->getLabel() << std::endl;
 
-    for (const Vertice& vizinho : grafo.vizinhosVertice(vertice.getIndice())) {
+    for (Vertice* vizinho : grafo.vizinhosVertice(vertice->getIndice())) {
       auto& resultado = visitados.insert(vizinho);
       if (resultado.second)
         pendentes.push(vizinho);

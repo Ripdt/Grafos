@@ -25,7 +25,7 @@ class BuscaProfundidade
   private:
     void percorrerTodosOsVertices(
       const int origem,
-      std::set<Vertice>& verticesVisitados,
+      std::set<Vertice*>& verticesVisitados,
       const int profundidade = 0
     ) const;
 };

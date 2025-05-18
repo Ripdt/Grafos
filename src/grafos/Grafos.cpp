@@ -75,8 +75,8 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
                 int indice;
                 std::cout << "Digite o índice do vértice a ser consultado: ";
                 std::cin >> indice;
-                for (const Vertice& vertice : grafo.vizinhosVertice(indice)) {
-                    std::cout << "\t Nome: " << vertice.getLabel() << std::endl;
+                for (const Vertice* vertice : grafo.vizinhosVertice(indice)) {
+                    std::cout << "\t Nome: " << vertice->getLabel() << std::endl;
                 }
                 std::cout << std::endl;
                 break;

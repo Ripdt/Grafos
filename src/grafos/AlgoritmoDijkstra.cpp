@@ -16,14 +16,14 @@ void AlgoritmoDijkstra::rodar(
   const int origem
 ) const
 {
-  const Vertice& verticeOrigem = grafo.getVertice(origem);
+  const Vertice* verticeOrigem = grafo.getVertice(origem);
 
   Caminho* caminhoOrigem = new Caminho(verticeOrigem);
   caminhoOrigem->distancia = 0.f;
   caminhoOrigem->marcado = true;
   caminhoOrigem->caminho.push_back(verticeOrigem);
 
-  menorCaminhoAteVertice.insert({ verticeOrigem.getIndice(), caminhoOrigem});
+  menorCaminhoAteVertice.insert({ verticeOrigem->getIndice(), caminhoOrigem});
 
   acharCaminhosAteVizinhos(verticeOrigem, *caminhoOrigem, menorCaminhoAteVertice);
 
@@ -31,15 +31,15 @@ void AlgoritmoDijkstra::rodar(
     const int indice = pair.first;
     const Pointer<Caminho>& caminho = pair.second;
     std::cout << "Caminho para " << indice << ": ";
-    for (const Vertice& vertice : caminho->caminho) {
-      std::cout << vertice.getIndice() << " ";
+    for (const Vertice* vertice : caminho->caminho) {
+      std::cout << vertice->getIndice() << " ";
     }
     std::cout << "(Distancia: " << caminho->distancia << ")" << std::endl;
   }
 }
 
 void AlgoritmoDijkstra::acharCaminhosAteVizinhos(
-  const Vertice& verticeOrigem,
+  const Vertice* verticeOrigem,
   const Caminho& caminhoAteOrigem,
   std::unordered_map<int, Pointer<Caminho>>& caminhoAteVertice
 ) const
@@ -54,7 +54,7 @@ void AlgoritmoDijkstra::acharCaminhosAteVizinhos(
       if (menorCaminho == nullptr || caminho->distancia < menorCaminho->distancia)
         menorCaminho = caminho;
 
-      const int indice = caminho->verticeDestino.getIndice();
+      const int indice = caminho->verticeDestino->getIndice();
       auto& it = caminhoAteVertice.find(indice);
       if (it == caminhoAteVertice.end())
         caminhoAteVertice.insert({ indice, caminho });
@@ -63,7 +63,7 @@ void AlgoritmoDijkstra::acharCaminhosAteVizinhos(
     }
 
     menorCaminho->marcado = true;
-    const Vertice& novaOrigem = menorCaminho->verticeDestino;
+    const Vertice* novaOrigem = menorCaminho->verticeDestino;
 
     auto ehMenorCaminho = [&menorCaminho](const Pointer<Caminho>& c) { 
       return c.getRaw() == menorCaminho; 
@@ -75,19 +75,19 @@ void AlgoritmoDijkstra::acharCaminhosAteVizinhos(
 }
 
 void AlgoritmoDijkstra::acharCaminhosAteVizinhos(
-  const Vertice& verticeOrigem,
+  const Vertice* verticeOrigem,
   const Caminho& caminhoAteOrigem,
   std::unordered_map<int, Pointer<Caminho>>& caminhoAteVertice,
   std::vector<Pointer<Caminho>>& caminhosEncontrados
 ) const
 {
-  for (const Vertice& vertice : grafo.vizinhosVertice(verticeOrigem.getIndice())) {
-    auto& it = caminhoAteVertice.find(vertice.getIndice());
+  for (const Vertice* vertice : grafo.vizinhosVertice(verticeOrigem->getIndice())) {
+    auto& it = caminhoAteVertice.find(vertice->getIndice());
     if (it != caminhoAteVertice.end() && it->second->marcado)
       continue;
 
     Caminho* caminhoVizinho = new Caminho(vertice);
-    caminhoVizinho->distancia = caminhoAteOrigem.distancia + grafo.pesoAresta(verticeOrigem.getIndice(), vertice.getIndice());
+    caminhoVizinho->distancia = caminhoAteOrigem.distancia + grafo.pesoAresta(verticeOrigem->getIndice(), vertice->getIndice());
     caminhoVizinho->caminho = caminhoAteOrigem.caminho;
     caminhoVizinho->caminho.push_back(vertice);
 

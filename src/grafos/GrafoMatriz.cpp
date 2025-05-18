@@ -170,19 +170,19 @@ float GrafoMatriz::pesoAresta(const int origem, const int destino) const {
 
 //------------------------------------------------------------
 
-std::vector<Vertice> GrafoMatriz::vizinhosVertice(const int indice) const {
-  std::set<Vertice> vizinhos;
+std::vector<Vertice*> GrafoMatriz::vizinhosVertice(const int indice) const {
+  std::set<Vertice*> vizinhos;
 
   for (int i = 0; i < matriz.size(); ++i)
       if (matriz[indice][i] != nullptr)
-          vizinhos.insert(*matriz[indice][i]->getDestino());
+          vizinhos.insert(matriz[indice][i]->getDestino());
 
   if (!ehDirecionado) 
     for (int j = 0; j < matriz[indice].size(); ++j)
       if (matriz[j][indice] != nullptr)
-        vizinhos.insert(*matriz[j][indice]->getOrigem());
+        vizinhos.insert(matriz[j][indice]->getOrigem());
   
-  return std::vector<Vertice>(vizinhos.begin(), vizinhos.end());
+  return std::vector<Vertice*>(vizinhos.begin(), vizinhos.end());
 }
 
 //------------------------------------------------------------
@@ -200,13 +200,15 @@ bool GrafoMatriz::existeAresta(const int origem, const int destino) const {
 
 //------------------------------------------------------------
 
-const Vertice& GrafoMatriz::getVertice(
+Vertice* GrafoMatriz::getVertice(
   const size_t indice
 ) const
 {
-  return *std::find_if(vertices.begin(), vertices.end(), [indice](const Vertice& v) {
-    return v.getIndice() == indice; 
-  });
+  for (const Vertice& v : vertices) {
+    if (v.getIndice() == indice) {
+      return const_cast<Vertice*>(&v);
+    }
+  }
 }
 
 //------------------------------------------------------------

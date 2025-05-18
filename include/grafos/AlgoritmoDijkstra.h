@@ -10,14 +10,14 @@
 class Caminho
 {
 public:
-	const Vertice verticeDestino;
+	const Vertice* verticeDestino;
 	float distancia = std::numeric_limits<float>::max();
 	bool marcado = false;
-	std::vector<Vertice> caminho;
+	std::vector<const Vertice*> caminho;
 
 public:
 	Caminho(
-		const Vertice& _verticeDestino
+		const Vertice* _verticeDestino
 	) :
 		verticeDestino(_verticeDestino)
 	{
@@ -46,13 +46,13 @@ class AlgoritmoDijkstra
 private:
 
 	void acharCaminhosAteVizinhos(
-		const Vertice& verticeOrigem,
+		const Vertice* verticeOrigem,
 		const Caminho& caminhoAteOrigem,
 		std::unordered_map<int, Pointer<Caminho>>& caminhoAteVertice
 	) const;
 
 	void acharCaminhosAteVizinhos(
-		const Vertice& verticeOrigem,
+		const Vertice* verticeOrigem,
 		const Caminho& caminhoAteOrigem,
 		std::unordered_map<int, Pointer<Caminho>>& caminhoAteVertice,
 		std::vector<Pointer<Caminho>>& caminhosEncontrados

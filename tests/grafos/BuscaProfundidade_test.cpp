@@ -19,20 +19,20 @@ TEST_F(BuscaProfundidadeTest, TESTA_BUSCA_MATRIZ_DIRECIONADA_1)
 
   BuscaProfundidade busca(grafo);
 
-  std::vector<Vertice> resultado = busca.percorrerTodosOsVertices(0);
+  std::vector<int> resultado = busca.percorrerTodosOsVertices(0);
   ASSERT_EQ(resultado.size(), 3);
-  EXPECT_EQ(resultado[0].getIndice(), 0);
-  EXPECT_EQ(resultado[1].getIndice(), 1);
-  EXPECT_EQ(resultado[2].getIndice(), 2);
+  EXPECT_EQ(resultado[0], 0);
+  EXPECT_EQ(resultado[1], 1);
+  EXPECT_EQ(resultado[2], 2);
 
   resultado = busca.percorrerTodosOsVertices(1);
   ASSERT_EQ(resultado.size(), 2);
-  EXPECT_EQ(resultado[0].getIndice(), 1);
-  EXPECT_EQ(resultado[1].getIndice(), 2);
+  EXPECT_EQ(resultado[0], 1);
+  EXPECT_EQ(resultado[1], 2);
 
   resultado = busca.percorrerTodosOsVertices(2);
   ASSERT_EQ(resultado.size(), 1);
-  EXPECT_EQ(resultado[0].getIndice(), 2);
+  EXPECT_EQ(resultado[0], 2);
 
   grafo.inserirAresta(1, 0); // cria ciclo
   resultado = busca.percorrerTodosOsVertices(1);
@@ -113,7 +113,7 @@ TEST_F(BuscaProfundidadeTest, TESTA_VERTICE_ISOLADO)
   BuscaProfundidade busca(grafo);
   auto resultado = busca.percorrerTodosOsVertices(1);
   ASSERT_EQ(resultado.size(), 1);
-  EXPECT_EQ(resultado[0].getIndice(), 1);
+  EXPECT_EQ(resultado [0], 1);
 }
 
 TEST_F(BuscaProfundidadeTest, TESTA_COMPONENTES_DESCONECTADOS)

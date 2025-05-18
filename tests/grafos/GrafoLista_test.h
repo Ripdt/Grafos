@@ -14,10 +14,10 @@ class GrafoLista;
 class GrafoListaTest : public ::testing::Test
 {
   protected:
-    GrafoLista* grafoNaoDirecionalPonderado;
-    GrafoLista* grafoDirecionalPonderado;
-    GrafoLista* grafoNaoDirecionalNaoPonderado;
-    GrafoLista* grafoDirecionalNaoPonderado;
+    GrafoLista* grafoNaoDirecionalPonderado = nullptr;
+    GrafoLista* grafoDirecionalPonderado = nullptr;
+    GrafoLista* grafoNaoDirecionalNaoPonderado = nullptr;
+    GrafoLista* grafoDirecionalNaoPonderado = nullptr;
 
     void SetUp() override;
     void TearDown() override;

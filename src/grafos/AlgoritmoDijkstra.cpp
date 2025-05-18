@@ -16,8 +16,6 @@ void AlgoritmoDijkstra::rodar(
   const int origem
 ) const
 {
-  std::unordered_map<int, Pointer<Caminho>> menorCaminhoAteVertice;
-
   const Vertice& verticeOrigem = grafo.getVertice(origem);
 
   Caminho* caminhoOrigem = new Caminho(verticeOrigem);

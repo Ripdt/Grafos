@@ -19,7 +19,9 @@ TEST_F(AlgoritmoDijkstraTest, TESTA_DIJKSTRA_GRAFO_1)
   grafo.inserirAresta(0, 2, 10.0f);
 
   AlgoritmoDijkstra dijkstra(grafo);
-  auto caminhos = dijkstra.rodar(0);
+  dijkstra.rodar(0);
+
+  auto caminhos = dijkstra.getCaminhos();
 
   ASSERT_EQ(caminhos.size(), 3);
   EXPECT_FLOAT_EQ(caminhos[0]->distancia, 0.0f);
@@ -39,7 +41,9 @@ TEST_F(AlgoritmoDijkstraTest, TESTA_DIJKSTRA_VERTICE_ISOLADO)
   grafo.inserirVertice("B"); // 1 (isolado)
 
   AlgoritmoDijkstra dijkstra(grafo);
-  auto caminhos = dijkstra.rodar(0);
+  dijkstra.rodar(0);
+
+  auto caminhos = dijkstra.getCaminhos();
 
   EXPECT_EQ(caminhos.size(), 1);
   EXPECT_TRUE(caminhos.find(0) != caminhos.end());
@@ -60,7 +64,9 @@ TEST_F(AlgoritmoDijkstraTest, TESTA_DIJKSTRA_COM_MULTIPLOS_CAMINHOS)
   grafo.inserirAresta(2, 3, 1.0f);
 
   AlgoritmoDijkstra dijkstra(grafo);
-  auto caminhos = dijkstra.rodar(0);
+  dijkstra.rodar(0);
+
+  auto caminhos = dijkstra.getCaminhos();
 
   EXPECT_FLOAT_EQ(caminhos[2]->distancia, 2.0f); // 0->1->2
   EXPECT_FLOAT_EQ(caminhos[3]->distancia, 3.0f); // 0->1->2->3
@@ -73,7 +79,9 @@ TEST_F(AlgoritmoDijkstraTest, TESTA_DIJKSTRA_AUTO_LACO)
   grafo.inserirAresta(0, 0, 1.0f); // laço
 
   AlgoritmoDijkstra dijkstra(grafo);
-  auto caminhos = dijkstra.rodar(0);
+  dijkstra.rodar(0);
+
+  auto caminhos = dijkstra.getCaminhos();
 
   ASSERT_EQ(caminhos.size(), 1);
   EXPECT_FLOAT_EQ(caminhos[0]->distancia, 0.0f);

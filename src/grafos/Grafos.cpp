@@ -133,7 +133,7 @@ void lerGrafo()
   std::cin >> caminho;
 
   if (caminho.substr(0,2).compare("ex") == 0) {
-    caminho = "../exemplo" + caminho.substr(2,3) + ".txt";
+    caminho = "../res/exemplo" + caminho.substr(2,3) + ".txt";
   }
 
   std::cout << "\nLendo grafo do arquivo: " << caminho << "...\n";
@@ -160,7 +160,7 @@ void lerGrafo()
     std::cout << "        BUSCA EM LARGURA (BFS)\n";
     std::cout << "========================================\n";
     BuscaLargura buscaLargura(*grafo);
-    buscaLargura.percorrerTodosOsVertices(origem);
+    buscaLargura.caminhoTodosOsVertices(origem);
 
     std::cout << "\n========================================\n";
     std::cout << "     ALGORITMO DE DIJKSTRA (Caminhos)\n";

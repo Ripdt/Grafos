@@ -1,2 +1,2 @@
-#include "Grafo.h"
+#include "grafos/Grafo.h"
 

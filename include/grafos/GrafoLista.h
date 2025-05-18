@@ -10,6 +10,7 @@
 #include <set>
 
 //------------------------------------------------------------
+
 typedef std::set<Aresta> ListaArestas;
 typedef std::pair<Pointer<Vertice>, ListaArestas> ArestasPorVertice;
 typedef std::map<Pointer<Vertice>, ListaArestas> ListaAdjacencia;

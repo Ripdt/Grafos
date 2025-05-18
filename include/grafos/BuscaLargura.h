@@ -3,6 +3,8 @@
 
 #include "grafos/Grafo.h"
 
+#include <vector>
+
 class Vertice;
 
 class BuscaLargura
@@ -15,7 +17,7 @@ class BuscaLargura
       const Grafo& _grafo
     );
 
-    void percorrerTodosOsVertices(
+    std::vector<int> caminhoTodosOsVertices(
       const int origem
     ) const;
 };

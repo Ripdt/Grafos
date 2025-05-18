@@ -20,11 +20,11 @@ TEST_F(BuscaLarguraTest, TESTA_BUSCA_MATRIZ_1)
 
   BuscaLargura busca(grafo);
 
-  std::vector<Vertice> resultado = busca.percorrerTodosOsVertices(0);
+  std::vector<int> resultado = busca.caminhoTodosOsVertices(0);
   ASSERT_EQ(resultado.size(), 3);
-  EXPECT_EQ(resultado[0].getIndice(), 0);
-  EXPECT_EQ(resultado[1].getIndice(), 1);
-  EXPECT_EQ(resultado[2].getIndice(), 2);
+  EXPECT_EQ(resultado[0], 0);
+  EXPECT_EQ(resultado[1], 1);
+  EXPECT_EQ(resultado[2], 2);
 }
 
 TEST_F(BuscaLarguraTest, TESTA_BUSCA_COM_CICLO)
@@ -39,7 +39,7 @@ TEST_F(BuscaLarguraTest, TESTA_BUSCA_COM_CICLO)
   grafo.inserirAresta(2, 0); // ciclo
 
   BuscaLargura busca(grafo);
-  auto resultado = busca.percorrerTodosOsVertices(0);
+  auto resultado = busca.caminhoTodosOsVertices(0);
   ASSERT_EQ(resultado.size(), 3);
 }
 
@@ -53,7 +53,7 @@ TEST_F(BuscaLarguraTest, TESTA_BUSCA_COM_AUTO_LACO)
   grafo.inserirAresta(1, 1); // auto-laço
 
   BuscaLargura busca(grafo);
-  auto resultado = busca.percorrerTodosOsVertices(0);
+  auto resultado = busca.caminhoTodosOsVertices(0);
   EXPECT_EQ(resultado.size(), 2);
 }
 
@@ -64,9 +64,9 @@ TEST_F(BuscaLarguraTest, TESTA_VERTICE_ISOLADO)
   grafo.inserirVertice("B"); // 1 isolado
 
   BuscaLargura busca(grafo);
-  auto resultado = busca.percorrerTodosOsVertices(1);
+  auto resultado = busca.caminhoTodosOsVertices(1);
   ASSERT_EQ(resultado.size(), 1);
-  EXPECT_EQ(resultado[0].getIndice(), 1);
+  EXPECT_EQ(resultado[0], 1);
 }
 
 TEST_F(BuscaLarguraTest, TESTA_COMPONENTES_DESCONECTADOS)
@@ -82,10 +82,10 @@ TEST_F(BuscaLarguraTest, TESTA_COMPONENTES_DESCONECTADOS)
 
   BuscaLargura busca(grafo);
 
-  auto resultado = busca.percorrerTodosOsVertices(0);
+  auto resultado = busca.caminhoTodosOsVertices(0);
   EXPECT_EQ(resultado.size(), 2); // A e B
 
-  resultado = busca.percorrerTodosOsVertices(2);
+  resultado = busca.caminhoTodosOsVertices(2);
   EXPECT_EQ(resultado.size(), 2); // C e D
 }
 
@@ -103,11 +103,11 @@ TEST_F(BuscaLarguraTest, TESTA_BUSCA_GRAFO_LISTA)
   grafo.inserirAresta(2, 3);
 
   BuscaLargura busca(grafo);
-  auto resultado = busca.percorrerTodosOsVertices(0);
+  auto resultado = busca.caminhoTodosOsVertices(0);
 
   ASSERT_EQ(resultado.size(), 4);
-  EXPECT_EQ(resultado[0].getIndice(), 0);
-  EXPECT_EQ(resultado[1].getIndice(), 1);
-  EXPECT_EQ(resultado[2].getIndice(), 2);
-  EXPECT_EQ(resultado[3].getIndice(), 3);
+  EXPECT_EQ(resultado[0], 0);
+  EXPECT_EQ(resultado[1], 1);
+  EXPECT_EQ(resultado[2], 2);
+  EXPECT_EQ(resultado[3], 3);
 }

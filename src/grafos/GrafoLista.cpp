@@ -152,7 +152,7 @@ std::vector<Vertice> GrafoLista::vizinhosVertice(const int indice) const {
   if (it == listaAdjacencia.end()) return {};
 
   for (const Aresta& aresta : it->second) {
-      vizinhos.push_back(*aresta.getDestino());
+    vizinhos.push_back(*aresta.getDestino());
   }
 
   return vizinhos;

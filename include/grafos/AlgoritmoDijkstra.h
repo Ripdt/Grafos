@@ -37,6 +37,12 @@ class AlgoritmoDijkstra
 		void rodar(
 			const int origem
 		) const;
+
+    const std::unordered_map<int, Pointer<Caminho>>& getCaminhos() const
+    {
+      return menorCaminhoAteVertice;
+    }
+
 private:
 
 	void acharCaminhosAteVizinhos(
@@ -51,6 +57,8 @@ private:
 		std::unordered_map<int, Pointer<Caminho>>& caminhoAteVertice,
 		std::vector<Pointer<Caminho>>& caminhosEncontrados
 	) const;
+
+	mutable std::unordered_map<int, Pointer<Caminho>> menorCaminhoAteVertice;
 };
 
 #endif

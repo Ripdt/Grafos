@@ -59,3 +59,19 @@ std::string Vertice::getLabel() const
 void Vertice::setIndice(int novoIndice) {
   indice = novoIndice;
 }
+
+//------------------------------------------------------------
+
+void Vertice::setCor(int novaCor)
+{
+  cor = novaCor;
+}
+
+//------------------------------------------------------------
+
+int Vertice::getCor() const
+{
+  return cor;
+}
+
+//------------------------------------------------------------

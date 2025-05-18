@@ -11,7 +11,7 @@ BuscaProfundidade::BuscaProfundidade(
 {
 }
 
-std::set<Vertice> BuscaProfundidade::percorrerTodosOsVertices(
+std::vector<int> BuscaProfundidade::percorrerTodosOsVertices(
   const int origem
 ) const
 {
@@ -20,7 +20,11 @@ std::set<Vertice> BuscaProfundidade::percorrerTodosOsVertices(
 
   percorrerTodosOsVertices(origem, caminho);
 
-  return caminho;
+  std::vector<int> caminhoRetorno;
+  for (auto it = caminho.begin(); it != caminho.end(); ++it)
+    caminhoRetorno.push_back(it->getIndice());
+
+  return caminhoRetorno;
 }
 
 

@@ -4,6 +4,7 @@
 #include <set>
 #include <stdexcept>
 #include "primitives/Matrix.h"
+
 //------------------------------------------------------------
 
 GrafoMatriz::GrafoMatriz(

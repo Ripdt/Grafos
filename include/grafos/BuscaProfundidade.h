@@ -4,6 +4,7 @@
 #include "grafos/Grafo.h"
 
 #include <set>
+#include <vector>
 
 class Vertice;
 
@@ -17,7 +18,7 @@ class BuscaProfundidade
       const Grafo& _grafo
     );
 
-    std::set<Vertice> percorrerTodosOsVertices(
+    std::vector<int> percorrerTodosOsVertices(
       const int origem
     ) const;
 

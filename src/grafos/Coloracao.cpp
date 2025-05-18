@@ -14,11 +14,11 @@ Coloracao::Coloracao(const Grafo& _grafo) : grafo(_grafo)
 
 //------------------------------------------------------------
 
-std::vector<int> Coloracao::colorir_BruteForce() const
+void Coloracao::colorir_BruteForce() const
 {
   const size_t numVertices = grafo.numeroVertices();
   if (numVertices == 0) {
-    return std::vector<int>();
+    return;
   }
 
   int numCores = 2;
@@ -32,14 +32,12 @@ std::vector<int> Coloracao::colorir_BruteForce() const
           const int cor = corPorIndice[idx];
           grafo.getVertice(idx)->setCor(cor);
         }
-        return corPorIndice;
+        return;
       }
     } while (proximaCombinacao(corPorIndice, numCores));
 
     numCores++;
   }
-
-  return std::vector<int>();
 }
 
 //------------------------------------------------------------
@@ -76,7 +74,7 @@ bool Coloracao::proximaCombinacao(std::vector<int>& corPorIndice, int numCores) 
 
 //------------------------------------------------------------
 
-std::vector<int> Coloracao::colorir_WelshPowell() const
+void Coloracao::colorir_WelshPowell() const
 {
   std::list<Vertice*> vertices;
   for (int i = 0; i < grafo.numeroVertices(); i++) {
@@ -105,8 +103,6 @@ std::vector<int> Coloracao::colorir_WelshPowell() const
       cor--;
     }
   }
-
-  return std::vector<int>();
 }
 
 //------------------------------------------------------------

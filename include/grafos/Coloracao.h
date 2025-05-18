@@ -13,9 +13,9 @@ public:
     const Grafo& _grafo
   );
 
-  std::vector<int> colorir_BruteForce() const;
+  void colorir_BruteForce() const;
 
-  std::vector<int> colorir_WelshPowell() const;
+  void colorir_WelshPowell() const;
 
 private:
 

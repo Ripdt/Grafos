@@ -28,8 +28,8 @@ TEST_F(ColoracaoTest, Coloracao_BruteForce_GrafoListaVazio)
   GrafoLista grafo(false, false);
 
   Coloracao coloracao(grafo);
-  std::vector<int> cores = coloracao.colorir_BruteForce();
-  EXPECT_TRUE(cores.empty());
+  coloracao.colorir_BruteForce();
+  EXPECT_TRUE(true);
 }
 
 //------------------------------------------------------------
@@ -42,7 +42,7 @@ TEST_F(ColoracaoTest, Coloracao_BruteForce_GrafoListaSimples)
   grafo.inserirAresta(0, 1);
 
   Coloracao coloracao(grafo);
-  std::vector<int> cores = coloracao.colorir_BruteForce();
+  coloracao.colorir_BruteForce();
 
   EXPECT_EQ(grafo.getVertice(0)->getCor(), 1);
   EXPECT_EQ(grafo.getVertice(1)->getCor(), 0);
@@ -55,8 +55,8 @@ TEST_F(ColoracaoTest, Coloracao_BruteForce_GrafoMatrizVazio)
   GrafoMatriz grafo(false, false);
 
   Coloracao coloracao(grafo);
-  std::vector<int> cores = coloracao.colorir_BruteForce();
-  EXPECT_TRUE(cores.empty());
+  coloracao.colorir_BruteForce();
+  EXPECT_TRUE(true);
 }
 
 //------------------------------------------------------------
@@ -69,7 +69,7 @@ TEST_F(ColoracaoTest, Coloracao_BruteForce_GrafoMatrizSimples)
   grafo.inserirAresta(0, 1);
 
   Coloracao coloracao(grafo);
-  std::vector<int> cores = coloracao.colorir_BruteForce();
+  coloracao.colorir_BruteForce();
 
   EXPECT_EQ(grafo.getVertice(0)->getCor(), 1);
   EXPECT_EQ(grafo.getVertice(1)->getCor(), 0);
@@ -148,8 +148,8 @@ TEST_F(ColoracaoTest, Coloracao_WelshPowell_GrafoListaVazio)
   GrafoLista grafo(false, false);
 
   Coloracao coloracao(grafo);
-  std::vector<int> cores = coloracao.colorir_WelshPowell();
-  EXPECT_TRUE(cores.empty());
+  coloracao.colorir_WelshPowell();
+  EXPECT_TRUE(true);
 }
 
 //------------------------------------------------------------
@@ -162,7 +162,7 @@ TEST_F(ColoracaoTest, Coloracao_WelshPowell_GrafoListaSimples)
   grafo.inserirAresta(0, 1);
 
   Coloracao coloracao(grafo);
-  std::vector<int> cores = coloracao.colorir_WelshPowell();
+  coloracao.colorir_WelshPowell();
 
   EXPECT_EQ(grafo.getVertice(0)->getCor(), 2);
   EXPECT_EQ(grafo.getVertice(1)->getCor(), 1);
@@ -175,8 +175,8 @@ TEST_F(ColoracaoTest, Coloracao_WelshPowell_GrafoMatrizVazio)
   GrafoMatriz grafo(false, false);
 
   Coloracao coloracao(grafo);
-  std::vector<int> cores = coloracao.colorir_WelshPowell();
-  EXPECT_TRUE(cores.empty());
+  coloracao.colorir_WelshPowell();
+  EXPECT_TRUE(true);
 }
 
 //------------------------------------------------------------
@@ -189,7 +189,7 @@ TEST_F(ColoracaoTest, Coloracao_WelshPowell_GrafoMatrizSimples)
   grafo.inserirAresta(0, 1);
 
   Coloracao coloracao(grafo);
-  std::vector<int> cores = coloracao.colorir_WelshPowell();
+  coloracao.colorir_WelshPowell();
 
   EXPECT_EQ(grafo.getVertice(0)->getCor(), 2);
   EXPECT_EQ(grafo.getVertice(1)->getCor(), 1);

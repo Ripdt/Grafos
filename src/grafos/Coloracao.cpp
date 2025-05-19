@@ -156,3 +156,29 @@ Vertice* Coloracao::verticeComMaiorSaturacao(
 }
 
 //------------------------------------------------------------
+
+void Coloracao::colorir_Greedy() const
+{
+  const int nVertices = static_cast<int>(grafo.numeroVertices());
+  int cor = nVertices;
+  for (int idx = 0; idx < nVertices;) {
+    Vertice* v = grafo.getVertice(idx);
+    bool corValida = true;
+    for (Vertice* vizinho : grafo.vizinhosVertice(v->getIndice())) {
+      if (vizinho->getCor() == cor) {
+        corValida = false;
+        break;
+      }
+    }
+
+    if (corValida) {
+      v->setCor(cor);
+      idx++;
+    }
+    else {
+      cor--;
+    }
+  }
+}
+
+//------------------------------------------------------------

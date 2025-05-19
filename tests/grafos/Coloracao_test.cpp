@@ -380,4 +380,124 @@ TEST_F(ColoracaoTest, Coloracao_DSatur_GrafoCompleto4)
 }
 
 //------------------------------------------------------------
+// Greedy
+//------------------------------------------------------------
+
+TEST_F(ColoracaoTest, Coloracao_Greedy_GrafoListaVazio)
+{
+  GrafoLista grafo(false, false);
+
+  Coloracao coloracao(grafo);
+  coloracao.colorir_Greedy();
+  EXPECT_TRUE(true);
+}
+
+//------------------------------------------------------------
+
+TEST_F(ColoracaoTest, Coloracao_Greedy_GrafoListaSimples)
+{
+  GrafoLista grafo(false, false);
+  grafo.inserirVertice("A");
+  grafo.inserirVertice("B");
+  grafo.inserirAresta(0, 1);
+
+  Coloracao coloracao(grafo);
+  coloracao.colorir_Greedy();
+
+  EXPECT_EQ(grafo.getVertice(0)->getCor(), 2);
+  EXPECT_EQ(grafo.getVertice(1)->getCor(), 1);
+}
+
+//------------------------------------------------------------
+
+TEST_F(ColoracaoTest, Coloracao_Greedy_GrafoMatrizVazio)
+{
+  GrafoMatriz grafo(false, false);
+
+  Coloracao coloracao(grafo);
+  coloracao.colorir_Greedy();
+  EXPECT_TRUE(true);
+}
+
+//------------------------------------------------------------
+
+TEST_F(ColoracaoTest, Coloracao_Greedy_GrafoMatrizSimples)
+{
+  GrafoMatriz grafo(false, false);
+  grafo.inserirVertice("A");
+  grafo.inserirVertice("B");
+  grafo.inserirAresta(0, 1);
+
+  Coloracao coloracao(grafo);
+  coloracao.colorir_Greedy();
+
+  EXPECT_EQ(grafo.getVertice(0)->getCor(), 2);
+  EXPECT_EQ(grafo.getVertice(1)->getCor(), 1);
+}
+
+//------------------------------------------------------------
+
+TEST_F(ColoracaoTest, Coloracao_Greedy_GrafoDesconexo)
+{
+  GrafoMatriz grafo(false, false);
+  grafo.inserirVertice("A");
+  grafo.inserirVertice("B");
+  grafo.inserirVertice("C");
+
+  Coloracao coloracao(grafo);
+  coloracao.colorir_Greedy();
+
+  // Todos os vértices podem ter a mesma cor
+  int corA = grafo.getVertice(0)->getCor();
+  int corB = grafo.getVertice(1)->getCor();
+  int corC = grafo.getVertice(2)->getCor();
+
+  EXPECT_EQ(corA, corB);
+  EXPECT_EQ(corB, corC);
+}
+
+//------------------------------------------------------------
+
+TEST_F(ColoracaoTest, Coloracao_Greedy_Triangulo)
+{
+  GrafoMatriz grafo(false, false);
+  grafo.inserirVertice("A");
+  grafo.inserirVertice("B");
+  grafo.inserirVertice("C");
+
+  grafo.inserirAresta(0, 1);
+  grafo.inserirAresta(1, 2);
+  grafo.inserirAresta(2, 0);
+
+  Coloracao coloracao(grafo);
+  coloracao.colorir_Greedy();
+
+  EXPECT_NE(grafo.getVertice(0)->getCor(), grafo.getVertice(1)->getCor());
+  EXPECT_NE(grafo.getVertice(1)->getCor(), grafo.getVertice(2)->getCor());
+  EXPECT_NE(grafo.getVertice(2)->getCor(), grafo.getVertice(0)->getCor());
+}
+
+//------------------------------------------------------------
+
+TEST_F(ColoracaoTest, Coloracao_Greedy_GrafoCompleto4)
+{
+  GrafoMatriz grafo(false, false);
+  for (int i = 0; i < 4; ++i)
+    grafo.inserirVertice(std::string(1, 'A' + i));
+
+  for (int i = 0; i < 4; ++i)
+    for (int j = i + 1; j < 4; ++j)
+      grafo.inserirAresta(i, j);
+
+  Coloracao coloracao(grafo);
+  coloracao.colorir_Greedy();
+
+  std::set<int> cores;
+  for (int i = 0; i < 4; ++i)
+    cores.insert(grafo.getVertice(i)->getCor());
+
+  EXPECT_EQ(cores.size(), 4);
+}
+
+//------------------------------------------------------------
 

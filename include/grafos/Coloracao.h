@@ -21,6 +21,8 @@ public:
 
   void colorir_DSatur() const;
 
+  void colorir_Greedy() const;
+
 private:
 
   bool coloracaoValida(const std::vector<int>& cores) const;

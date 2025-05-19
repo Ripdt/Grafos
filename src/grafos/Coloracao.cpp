@@ -8,8 +8,9 @@
 
 //------------------------------------------------------------
 
-Coloracao::Coloracao(const Grafo& _grafo) : grafo(_grafo)
+Coloracao::Coloracao(Grafo& _grafo) : grafo(_grafo)
 {
+  grafo.resetarCores();
 }
 
 //------------------------------------------------------------
@@ -77,7 +78,7 @@ bool Coloracao::proximaCombinacao(std::vector<int>& corPorIndice, int numCores) 
 void Coloracao::colorir_WelshPowell() const
 {
   std::list<Vertice*> vertices = verticesOrdenadosPorGrau();
-  int cor = vertices.size();
+  int cor = static_cast<int>(vertices.size());
   while (!vertices.empty()) {
     Vertice* v = vertices.front();
     bool corValida = true;
@@ -118,7 +119,7 @@ std::list<Vertice*> Coloracao::verticesOrdenadosPorGrau() const
 void Coloracao::colorir_DSatur() const
 {
   std::list<Vertice*> vertices = verticesOrdenadosPorGrau();
-  int cor = vertices.size();
+  int cor = static_cast<int>(vertices.size());
 
   while (!vertices.empty()) {
     Vertice* v = verticeComMaiorSaturacao(vertices);

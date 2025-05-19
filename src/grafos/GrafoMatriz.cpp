@@ -219,3 +219,12 @@ size_t GrafoMatriz::numeroVertices() const
 }
 
 //------------------------------------------------------------
+
+void GrafoMatriz::resetarCores()
+{
+  for (Vertice& vertice : vertices) {
+    vertice.setCor(-1);
+  }
+}
+
+//------------------------------------------------------------

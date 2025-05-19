@@ -70,6 +70,8 @@ public:
   ) const override;
 
   size_t numeroVertices() const override;
+
+  void resetarCores() override;
 };
 
 //------------------------------------------------------------

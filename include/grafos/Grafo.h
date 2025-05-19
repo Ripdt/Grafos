@@ -74,6 +74,8 @@ public:
   virtual Vertice* getVertice(
     const size_t indice
   ) const = 0;
+
+  virtual void resetarCores() = 0;
 };
 
 //------------------------------------------------------------

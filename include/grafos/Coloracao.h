@@ -12,7 +12,7 @@ class Coloracao
 {
 public:
   Coloracao(
-    const Grafo& _grafo
+    Grafo& _grafo
   );
 
   void colorir_BruteForce() const;
@@ -33,7 +33,7 @@ private:
     const std::list<Vertice*>& vertices
   ) const;
 
-  const Grafo& grafo;
+  Grafo& grafo;
 };
 
 #endif

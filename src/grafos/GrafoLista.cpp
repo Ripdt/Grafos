@@ -242,3 +242,13 @@ size_t GrafoLista::numeroVertices() const
 }
 
 //------------------------------------------------------------
+
+void GrafoLista::resetarCores()
+{
+  for (auto& pair : listaAdjacencia) {
+    Vertice* vertice = pair.first;
+    vertice->setCor(-1);
+  }
+}
+
+//------------------------------------------------------------

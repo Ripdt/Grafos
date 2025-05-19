@@ -75,6 +75,8 @@ public:
 
   size_t numeroVertices() const override;
 
+  void resetarCores() override;
+
 private:
   Vertice* buscaVertice(const size_t indice) const;
 

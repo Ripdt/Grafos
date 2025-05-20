@@ -120,7 +120,7 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
 void executarColoracao(
   Grafo& grafo,
   const std::string& nomeAlgoritmo,
-  std::function<void(Coloracao&)> algoritmo
+  const std::function<void(Coloracao&)>& algoritmo
 ) {
   grafo.resetarCores();
   auto start = std::chrono::high_resolution_clock::now();

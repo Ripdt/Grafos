@@ -31,7 +31,7 @@ std::vector<int> BuscaLargura::caminhoTodosOsVertices(
     std::cout << vertice->getIndice() << " - " << vertice->getLabel() << std::endl;
 
     for (Vertice* vizinho : grafo.vizinhosVertice(vertice->getIndice())) {
-      auto& resultado = visitados.insert(vizinho);
+      auto resultado = visitados.insert(vizinho);
       if (resultado.second)
         pendentes.push(vizinho);
     }

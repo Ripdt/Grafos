@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <numeric>
+#include <algorithm>
 
 AlgoritmoDijkstra::AlgoritmoDijkstra(
   const Grafo& _grafo
@@ -55,7 +56,7 @@ void AlgoritmoDijkstra::acharCaminhosAteVizinhos(
         menorCaminho = caminho;
 
       const int indice = caminho->verticeDestino->getIndice();
-      auto& it = caminhoAteVertice.find(indice);
+      auto it = caminhoAteVertice.find(indice);
       if (it == caminhoAteVertice.end())
         caminhoAteVertice.insert({ indice, caminho });
       else if (caminhoAteVertice.at(indice)->distancia > caminho->distancia)
@@ -82,7 +83,7 @@ void AlgoritmoDijkstra::acharCaminhosAteVizinhos(
 ) const
 {
   for (const Vertice* vertice : grafo.vizinhosVertice(verticeOrigem->getIndice())) {
-    auto& it = caminhoAteVertice.find(vertice->getIndice());
+    auto it = caminhoAteVertice.find(vertice->getIndice());
     if (it != caminhoAteVertice.end() && it->second->marcado)
       continue;
 

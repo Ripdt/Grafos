@@ -43,7 +43,7 @@ void BuscaProfundidade::percorrerTodosOsVertices(
   std::cout << vertice->getIndice() << " - " << vertice->getLabel() << std::endl;
 
   for (Vertice* vertice : grafo.vizinhosVertice(origem)) {
-    auto& resultado = verticesVisitados.insert(vertice);
+    auto resultado = verticesVisitados.insert(vertice);
     if (resultado.second)
       percorrerTodosOsVertices(vertice->getIndice(), verticesVisitados, profundidade + 1);
   }

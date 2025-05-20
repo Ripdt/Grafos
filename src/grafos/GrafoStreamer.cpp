@@ -45,7 +45,7 @@ Grafo* GrafoStreamer::ler(
     if (!file.is_open())
     {
       const std::string msg = "Falha ao tentar abrir o arquivo: " + path;
-      throw std::exception(msg.c_str());
+      throw std::runtime_error(msg.c_str());
     }
 
     std::string line;
@@ -89,7 +89,7 @@ Grafo* GrafoStreamer::criarGrafo(
   const std::vector<std::string> tokens = Utils::split(line, ' ');
   if (tokens.size() != 4) {
     const std::string msg = "Grafo invalido: " + line;
-    throw std::exception(msg.c_str());
+    throw std::runtime_error(msg.c_str());
   }
 
   const size_t numeroVertices = std::stoi(tokens[0]);

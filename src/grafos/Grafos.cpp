@@ -1,6 +1,8 @@
 #include <iostream>
-
 #include <locale>
+#include <chrono>
+#include <set>
+#include <functional>
 
 #include "grafos/GrafoLista.h"
 #include "grafos/GrafoMatriz.h"
@@ -9,6 +11,7 @@
 #include "grafos/AlgoritmoDijkstra.h"
 #include "grafos/BuscaLargura.h"
 #include "grafos/BuscaProfundidade.h"
+#include "grafos/Coloracao.h"
 
 const std::string TITULO_GRAFO_LISTA = "Grafo Lista de Adjacência";
 const std::string TITULO_GRAFO_MATRIZ = "Grafo Matriz de Adjacência";
@@ -114,6 +117,38 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
     } while (op != 9);
 }
 
+void executarColoracao(
+  Grafo& grafo,
+  const std::string& nomeAlgoritmo,
+  std::function<void(Coloracao&)> algoritmo
+) {
+  grafo.resetarCores();
+  auto start = std::chrono::high_resolution_clock::now();
+  Coloracao coloracao(grafo);
+  algoritmo(coloracao);
+  auto end = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+  std::set<int> cores;
+  for (size_t i = 0; i < grafo.numeroVertices(); i++) {
+    cores.insert(grafo.getVertice(i)->getCor());
+  }
+
+  std::cout << "Algoritmo: " << nomeAlgoritmo << "\n";
+  std::cout << "Tempo de execução: " << duration.count() << "ms\n";
+  std::cout << "Número de cores: " << cores.size() << "\n";
+
+  if (grafo.numeroVertices() < 10) {
+    std::cout << "\nColoração dos vértices:\n";
+    for (size_t i = 0; i < grafo.numeroVertices(); i++) {
+      std::cout << "Vértice " << i << " (" << grafo.labelVertice(i) << "): Cor " 
+                << grafo.getVertice(i)->getCor() << "\n";
+    }
+  }
+
+  std::cout << "\n";
+}
+
 void lerGrafo()
 {
   std::cout << "\n========================================\n";
@@ -168,7 +203,14 @@ void lerGrafo()
     AlgoritmoDijkstra algoritmo(*grafo);
     algoritmo.rodar(origem);
 
-    std::cout << "\n";
+    std::cout << "\n========================================\n";
+    std::cout << "     COLORAÇÃO DO GRAFO\n";
+    std::cout << "========================================\n";
+
+    executarColoracao(*grafo, "Força Bruta", [](Coloracao& c) { c.colorir_BruteForce(); });
+    executarColoracao(*grafo, "Welsh-Powell", [](Coloracao& c) { c.colorir_WelshPowell(); });
+    executarColoracao(*grafo, "DSatur", [](Coloracao& c) { c.colorir_DSatur(); });
+    executarColoracao(*grafo, "Greedy", [](Coloracao& c) { c.colorir_Greedy(); });
   } else {
     std::cout << "\n[Erro] Não foi possível ler o grafo do arquivo.\n";
   }

@@ -168,7 +168,7 @@ void lerGrafo()
   std::cin >> caminho;
 
   if (caminho.substr(0,2).compare("ex") == 0) {
-    caminho = "../res/exemplo" + caminho.substr(2,3) + ".txt";
+    caminho = "res/exemplo" + caminho.substr(2,3) + ".txt";
   }
 
   std::cout << "\nLendo grafo do arquivo: " << caminho << "...\n";

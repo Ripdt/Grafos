@@ -56,18 +56,19 @@ Grafo* GrafoStreamer::ler(
     while (std::getline(file, line))
     {
       const std::vector<std::string> tokens = Utils::split(line, ' ');
-      if (tokens.size() != 3)
+      if (tokens.size() != 2)
       {
         std::cerr << "Aresta invalida: " << line << std::endl;
         throw std::exception();
       }
       const int origem = std::stoi(tokens[0]);
       const int destino = std::stoi(tokens[1]);
-
-      std::istringstream iss(tokens[2]);
-      iss.imbue(std::locale("C"));
-      float peso;
-      iss >> peso;
+      float peso = 0.f;
+      if (tokens.size() == 3) {
+        std::istringstream iss(tokens[2]);
+        iss.imbue(std::locale("C"));
+        iss >> peso;
+      }
 
       grafo->inserirAresta(origem, destino, peso);
     }

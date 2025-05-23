@@ -56,7 +56,7 @@ Grafo* GrafoStreamer::ler(
     while (std::getline(file, line))
     {
       const std::vector<std::string> tokens = Utils::split(line, ' ');
-      if (tokens.size() != 2)
+      if (tokens.size() > 3)
       {
         std::cerr << "Aresta invalida: " << line << std::endl;
         throw std::exception();

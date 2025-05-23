@@ -24,7 +24,7 @@ void Coloracao::colorir_BruteForce() const
 
   int numCores = 2;
   while (true) {
-    // Inicializa com a primeira combinação (todos vértices com cor 0)
+    // Inicializa com a primeira combinaï¿½ï¿½o (todos vï¿½rtices com cor 0)
     std::vector<int> corPorIndice(numVertices /*idx*/, 0 /*cor*/);
 
     do {
@@ -63,7 +63,7 @@ bool Coloracao::proximaCombinacao(std::vector<int>& corPorIndice, int numCores) 
   for (int i = 0; i < corPorIndice.size(); i++) {
     if (corPorIndice[i] < numCores - 1) {
       corPorIndice[i]++;
-      // Reseta todos os vértices anteriores para 0
+      // Reseta todos os vï¿½rtices anteriores para 0
       for (int j = 0; j < i; j++) {
         corPorIndice[j] = 0;
       }
@@ -78,7 +78,8 @@ bool Coloracao::proximaCombinacao(std::vector<int>& corPorIndice, int numCores) 
 void Coloracao::colorir_WelshPowell() const
 {
   std::list<Vertice*> vertices = verticesOrdenadosPorGrau();
-  int cor = static_cast<int>(vertices.size());
+  int corBckp = static_cast<int>(vertices.size());
+  int cor = corBckp;
   while (!vertices.empty()) {
     Vertice* v = vertices.front();
     bool corValida = true;
@@ -92,6 +93,7 @@ void Coloracao::colorir_WelshPowell() const
     if (corValida) {
       v->setCor(cor);
       vertices.pop_front();
+      cor = corBckp;
     }
     else {
       cor--;
@@ -119,19 +121,28 @@ std::list<Vertice*> Coloracao::verticesOrdenadosPorGrau() const
 void Coloracao::colorir_DSatur() const
 {
   std::list<Vertice*> vertices = verticesOrdenadosPorGrau();
-  int cor = static_cast<int>(vertices.size());
 
   while (!vertices.empty()) {
     Vertice* v = verticeComMaiorSaturacao(vertices);
-    v->setCor(cor);
 
-    std::vector<Vertice*> vizinhos = std::move(grafo.vizinhosVertice(v->getIndice()));
-    for (Vertice* vizinho : vizinhos) {
-      vizinho->aumentarSaturacao();
+    std::vector<bool> coresUsadas(grafo.numeroVertices(), false);
+    for (Vertice* vizinho : grafo.vizinhosVertice(v->getIndice())) {
+      int corVizinho = vizinho->getCor();
+      if (corVizinho != -1) {
+        coresUsadas[corVizinho] = true;
+      }
     }
 
-    if (!vizinhos.empty()) {
-      cor--;
+    int corEscolhida = 0;
+    while (corEscolhida < (int)coresUsadas.size() && coresUsadas[corEscolhida]) {
+      corEscolhida++;
+    }
+    v->setCor(corEscolhida);
+
+    for (Vertice* vizinho : grafo.vizinhosVertice(v->getIndice())) {
+      if (vizinho->getCor() == -1) {
+        vizinho->aumentarSaturacao();
+      }
     }
 
     vertices.remove(v);
@@ -160,24 +171,25 @@ Vertice* Coloracao::verticeComMaiorSaturacao(
 void Coloracao::colorir_Greedy() const
 {
   const int nVertices = static_cast<int>(grafo.numeroVertices());
-  int cor = nVertices;
-  for (int idx = 0; idx < nVertices;) {
+
+  for (int idx = 0; idx < nVertices; idx++) {
     Vertice* v = grafo.getVertice(idx);
-    bool corValida = true;
+
+    std::vector<bool> coresUsadas(nVertices, false);
+
     for (Vertice* vizinho : grafo.vizinhosVertice(v->getIndice())) {
-      if (vizinho->getCor() == cor) {
-        corValida = false;
-        break;
+      int corVizinho = vizinho->getCor();
+      if (corVizinho != -1) {
+        coresUsadas[corVizinho] = true;
       }
     }
 
-    if (corValida) {
-      v->setCor(cor);
-      idx++;
+    int corEscolhida = 0;
+    while (corEscolhida < nVertices && coresUsadas[corEscolhida]) {
+      corEscolhida++;
     }
-    else {
-      cor--;
-    }
+
+    v->setCor(corEscolhida);
   }
 }
 

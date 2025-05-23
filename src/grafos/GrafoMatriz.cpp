@@ -209,6 +209,8 @@ Vertice* GrafoMatriz::getVertice(
       return const_cast<Vertice*>(&v);
     }
   }
+
+  return nullptr;
 }
 
 //------------------------------------------------------------

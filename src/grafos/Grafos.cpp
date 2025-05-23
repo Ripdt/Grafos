@@ -207,10 +207,10 @@ void lerGrafo()
     std::cout << "     COLORAÇÃO DO GRAFO\n";
     std::cout << "========================================\n";
 
-    executarColoracao(*grafo, "Força Bruta", [](Coloracao& c) { c.colorir_BruteForce(); });
     executarColoracao(*grafo, "Welsh-Powell", [](Coloracao& c) { c.colorir_WelshPowell(); });
     executarColoracao(*grafo, "DSatur", [](Coloracao& c) { c.colorir_DSatur(); });
     executarColoracao(*grafo, "Greedy", [](Coloracao& c) { c.colorir_Greedy(); });
+    executarColoracao(*grafo, "Força Bruta", [](Coloracao& c) { c.colorir_BruteForce(); });
   } else {
     std::cout << "\n[Erro] Não foi possível ler o grafo do arquivo.\n";
   }

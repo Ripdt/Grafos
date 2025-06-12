@@ -13,17 +13,19 @@
 #include "grafos/BuscaProfundidade.h"
 #include "grafos/Coloracao.h"
 
+#include "grafos/FordFulkerson.h"
+
 const std::string TITULO_GRAFO_LISTA = "Grafo Lista de Adjacência";
 const std::string TITULO_GRAFO_MATRIZ = "Grafo Matriz de Adjacência";
 
 template <typename T>
-struct FeedbackArgs {
+struct RespostaArgs {
     const T item;
     const std::string action;
 };
 
 template <typename T>
-void makeFeedbackResponse(const bool response, const FeedbackArgs<T> &args) {
+void estruturaResposta(const bool response, const RespostaArgs<T> &args) {
     if (!response) {
         std::cout << "\n[ERRO] Ocorreu um erro durante a operação! Tente novamente.\n";
         return;
@@ -37,7 +39,35 @@ void makeFeedbackResponse(const bool response, const FeedbackArgs<T> &args) {
               << "=======================================\n";
 }
 
-void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
+void executarFordFulkerson(Grafo& grafo) {
+  int op;
+  do
+  {
+    std::cout << "\n--- Ford-Fulkerson ---\n";
+    std::cout << "1 - Encontrar fluxo máximo\n";
+    std::cout << "2 - Voltar\n";
+    std::cout << "Escolha: ";
+    std::cin >> op;
+
+    switch (op) {
+      case 1:
+        int origem, destino;
+        std::cout << "Digite o índice do vértice de origem: ";
+        std::cin >> origem;
+        std::cout << "Digite o índice do vértice de destino: ";
+        std::cin >> destino;
+
+        int fluxoMaximo = FordFulkerson::encontrarFluxoMaximo(&grafo, origem, destino);
+        std::cout << "Fluxo máximo de " << origem << " para " << destino << ": " << fluxoMaximo << std::endl;
+        break;
+    }
+
+    std::cout << "Voltando...\n";
+  } while (op != 2);
+}
+
+template <typename T>
+void menuGrafo(T& grafo, const std::string& tituloGrafo) {
     int op;
     do {
         std::cout << "\n--- " << tituloGrafo << " ---\n";
@@ -47,7 +77,8 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
         std::cout << "4 - Adicionar aresta\n";
         std::cout << "5 - Remover aresta\n";
         std::cout << "6 - Exibir grafo\n";
-        std::cout << "7 - Voltar\n";
+        std::cout << "7 - Ford-Fulkerson \n";
+        std::cout << "8 - Voltar\n";
         std::cout << "Escolha: ";
         std::cin >> op;
 
@@ -57,11 +88,9 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
                 std::cout << "Digite o rótulo do vértice: ";
                 std::cin >> input;
 
-
                 const bool response = grafo.inserirVertice(input);;
 
-                makeFeedbackResponse<std::string>(response, { input, "ADICAO" });
-
+                estruturaResposta<std::string>(response, { input, "ADICAO" });
                 break;
             }
             case 2: {
@@ -71,7 +100,7 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
 
                 const bool response = grafo.removerVertice(input);
 
-                makeFeedbackResponse<int>(response, { input, "REMOCAO" });
+                estruturaResposta<int>(response, { input, "REMOCAO" });
                 break;
             }
             case 3: {
@@ -91,7 +120,7 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
               std::cin >> origem >> destino >> peso;
 
               const bool response = grafo.inserirAresta(origem, destino, peso);
-              makeFeedbackResponse<std::string>(response, { origem + " - " + destino, "INSERCAO" });
+              estruturaResposta<std::string>(response, { origem + " - " + destino, "INSERCAO" });
 
               break;
             }
@@ -101,7 +130,7 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
                 std::cin >> origem >> destino;
 
                 const bool response = grafo.removerAresta(origem, destino);
-                makeFeedbackResponse<std::string>(response, { origem + " - " + destino, "REMOCAO" });
+                estruturaResposta<std::string>(response, { origem + " - " + destino, "REMOCAO" });
 
                 break;
             }
@@ -109,6 +138,9 @@ void menuGrafo(Grafo& grafo, const std::string& tituloGrafo) {
                 grafo.imprime();
                 break;
             case 7:
+                executarFordFulkerson(grafo);
+                break;
+            case 8:
                 std::cout << "Voltando...\n";
                 break;
             default:
@@ -180,6 +212,8 @@ void lerGrafo()
     std::cout << "========================================\n";
     grafo->imprime();
     std::cout << "\n";
+
+    executarFordFulkerson(*grafo);
 
     int origem;
     std::cout << "Digite o índice do vértice de origem: ";

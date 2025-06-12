@@ -40,7 +40,7 @@ Grafo* GrafoStreamer::ler(
 {
   Grafo* grafo = nullptr;
   try {
-    std::ifstream file(path);
+    std::ifstream file("/Users/joao.prudencio/Desktop/facul/Grafos/res/ford.txt");
 
     if (!file.is_open())
     {

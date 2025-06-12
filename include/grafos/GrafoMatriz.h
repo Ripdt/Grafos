@@ -72,6 +72,8 @@ public:
   size_t numeroVertices() const override;
 
   void resetarCores() override;
+
+  GrafoMatriz* clonar() const;
 };
 
 //------------------------------------------------------------

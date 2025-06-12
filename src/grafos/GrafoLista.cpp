@@ -252,3 +252,26 @@ void GrafoLista::resetarCores()
 }
 
 //------------------------------------------------------------
+
+GrafoLista* GrafoLista::clonar() const {
+  auto* copia = new GrafoLista(ehDirecionado, ehPonderado);
+
+  for (const Vertice* v : vertices) {
+    copia->inserirVertice(v->getLabel());
+  }
+
+  for (const auto& par : listaAdjacencia) {
+    const Vertice* origem = par.first;
+    for (const Aresta& aresta : par.second) {
+      int indiceOrigem = origem->getIndice();
+      int indiceDestino = aresta.getDestino()->getIndice();
+      float peso = aresta.getPeso();
+
+      copia->inserirAresta(indiceOrigem, indiceDestino, peso);
+    }
+  }
+
+  return copia;
+}
+
+//------------------------------------------------------------

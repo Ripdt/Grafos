@@ -230,3 +230,32 @@ void GrafoMatriz::resetarCores()
 }
 
 //------------------------------------------------------------
+
+GrafoMatriz* GrafoMatriz::clonar() const {
+  auto* copia = new GrafoMatriz(ehDirecionado, ehPonderado);
+
+  std::vector<std::string> labelsOriginais;
+  for (const Vertice& v : vertices) {
+      labelsOriginais.push_back(v.getLabel());
+  }
+
+  for (const std::string& label : labelsOriginais) {
+      copia->inserirVertice(label);
+  }
+
+  for (int i = 0; i < matriz.size(); ++i) {
+      for (int j = 0; j < matriz[i].size(); ++j) {
+          Aresta* aresta = matriz[i][j];
+          if (aresta != nullptr) {
+              float peso = aresta->getPeso();
+              if (ehDirecionado || i <= j) {
+                  copia->inserirAresta(i, j, peso);
+              }
+          }
+      }
+  }
+
+  return copia;
+}
+
+//------------------------------------------------------------

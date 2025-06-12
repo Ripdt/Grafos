@@ -76,6 +76,8 @@ public:
   ) const = 0;
 
   virtual void resetarCores() = 0;
+
+  virtual Grafo* clonar() const = 0;
 };
 
 //------------------------------------------------------------

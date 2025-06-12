@@ -77,6 +77,8 @@ public:
 
   void resetarCores() override;
 
+  GrafoLista* clonar() const;
+
 private:
   Vertice* buscaVertice(const size_t indice) const;
 

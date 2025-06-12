@@ -6,9 +6,15 @@
 #include "grafos/GrafoLista.h"
 #include "grafos/GrafoMatriz.h"
 
+struct SolucaoBuscaLocal {
+    Grafo* grafo;
+    int fluxo;
+};
+
 class FordFulkerson {
 public:
     static int encontrarFluxoMaximo(Grafo* grafoOriginal, int origem, int destino);
+    static SolucaoBuscaLocal otimizadoFluxoBuscaLocal(Grafo* grafoOriginal, int origem, int destino);
 
 private:
     static bool bfs(Grafo* grafo, int origem, int destino, std::vector<int>& caminho);

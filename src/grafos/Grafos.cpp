@@ -45,20 +45,22 @@ void executarFordFulkerson(Grafo& grafo) {
   {
     std::cout << "\n--- Ford-Fulkerson ---\n";
     std::cout << "1 - Encontrar fluxo máximo\n";
-    std::cout << "2 - Voltar\n";
+    std::cout << "2 - Otimizar fluxo máximo\n";
+    std::cout << "3 - Voltar\n";
     std::cout << "Escolha: ";
     std::cin >> op;
+    int origem, destino;
+    std::cout << "Digite o índice do vértice de origem: ";
+    std::cin >> origem;
+    std::cout << "Digite o índice do vértice de destino: ";
+    std::cin >> destino;
 
     switch (op) {
       case 1:
-        int origem, destino;
-        std::cout << "Digite o índice do vértice de origem: ";
-        std::cin >> origem;
-        std::cout << "Digite o índice do vértice de destino: ";
-        std::cin >> destino;
-
-        int fluxoMaximo = FordFulkerson::encontrarFluxoMaximo(&grafo, origem, destino);
-        std::cout << "Fluxo máximo de " << origem << " para " << destino << ": " << fluxoMaximo << std::endl;
+        FordFulkerson::encontrarFluxoMaximo(&grafo, origem, destino);
+        break;
+      case 2:
+        FordFulkerson::otimizadoFluxoBuscaLocal(&grafo, origem, destino);
         break;
     }
 

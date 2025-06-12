@@ -1,103 +1,73 @@
 #include "FordFulkerson.h"
 #include <queue>
 #include <climits>
-#include <iostream>
+#include <algorithm>
+#include <type_traits>
 
-int FordFulkerson::encontrarFluxoMaximo(Grafo* grafoOriginal, int origem, int destino) {
-    Grafo* grafoResidual = clonarGrafo(grafoOriginal);
+const int FordFulkerson::MAX_PASSOS_BUSCA_LOCAL;
+
+ResultadoFordFulkerson FordFulkerson::encontrarFluxoMaximo(Grafo* grafoOriginal, int origem, int destino) {
+    auto grafoResidual = clonarGrafo(grafoOriginal);
     int fluxoMaximo = 0;
     int passos = 0;
     std::vector<int> caminho;
+    int fluxo;
 
-    while (bfs(grafoResidual, origem, destino, caminho)) {
+    while (bfs(grafoResidual.get(), origem, destino, caminho, fluxo)) {
         passos++;
-        int fluxo = INT_MAX;
-
         for (size_t i = 1; i < caminho.size(); i++) {
             int u = caminho[i - 1];
             int v = caminho[i];
-            fluxo = std::min(fluxo, capacidadeResidual(grafoResidual, u, v));
+            atualizarFluxo(grafoResidual.get(), u, v, fluxo);
         }
-
-        for (size_t i = 1; i < caminho.size(); i++) {
-            int u = caminho[i - 1];
-            int v = caminho[i];
-            atualizarFluxo(grafoResidual, u, v, fluxo);
-        }
-
         fluxoMaximo += fluxo;
     }
 
-    std::cout << "\n========================================\n";
-    std::cout << "           ESTATÍSTICAS DA EXECUÇÃO\n";
-    std::cout << "========================================\n";
-    std::cout << "Fluxo máximo encontrado: " << fluxoMaximo << "\n";
-    std::cout << "Número de passos (iterações do BFS): " << passos << "\n";
-    std::cout << "Grafo residual final:\n";
-    grafoResidual->imprime();
-    std::cout << "========================================\n";
-
-    delete grafoResidual;
-    return fluxoMaximo;
+    return {std::move(grafoResidual), fluxoMaximo, passos};
 }
 
-SolucaoBuscaLocal FordFulkerson::otimizadoFluxoBuscaLocal(Grafo* grafoOriginal, int origem, int destino) {
-   int passos = 0;
-    Grafo* melhor = clonarGrafo(grafoOriginal);
-    int melhorFluxo = encontrarFluxoMaximo(melhor, origem, destino);
+SolucaoBuscaLocal FordFulkerson::otimizarFluxoBuscaLocal(Grafo* grafoOriginal, int origem, int destino, int maxIteracoes) {
+    auto resultadoInicial = encontrarFluxoMaximo(grafoOriginal, origem, destino);
+    auto melhorGrafo = clonarGrafo(grafoOriginal);
+    int melhorFluxo = resultadoInicial.fluxoMaximo;
+    int melhorias = 0;
 
-    bool houveMelhora;
+    for (int iteracao = 0; iteracao < maxIteracoes; iteracao++) {
+        bool melhorou = false;
 
-    do {
-        houveMelhora = false;
-        passos++;
-
-        // Explora vizinhos: inverter arestas
-        for (int u = 0; u < melhor->numeroVertices(); ++u) {
-            for (Vertice* vPtr : melhor->vizinhosVertice(u)) {
+        for (int u = 0; u < melhorGrafo->numeroVertices(); ++u) {
+            auto vizinhos = melhorGrafo->vizinhosVertice(u);
+            for (Vertice* vPtr : vizinhos) {
                 int v = vPtr->getIndice();
-                if (u == v || !melhor->existeAresta(u, v)) continue;
+                if (u == v) continue;
 
-                int peso = melhor->pesoAresta(u, v);
-                // cria vizinho
-                Grafo* vizinho = clonarGrafo(melhor);
+                auto vizinho = clonarGrafo(melhorGrafo.get());
+                int peso = vizinho->pesoAresta(u, v);
                 vizinho->removerAresta(u, v);
                 vizinho->inserirAresta(v, u, peso);
 
-                int fluxoVizinho = encontrarFluxoMaximo(vizinho, origem, destino);
+                int fluxoVizinho = encontrarFluxoMaximo(vizinho.get(), origem, destino).fluxoMaximo;
 
                 if (fluxoVizinho > melhorFluxo) {
-                    delete melhor;
-                    melhor = vizinho;
+                    melhorGrafo = std::move(vizinho);
                     melhorFluxo = fluxoVizinho;
-                    houveMelhora = true;
-                    break; // aceita primeiro vizinho melhor
+                    melhorias++;
+                    melhorou = true;
+                    break;
                 }
-
-                delete vizinho;
             }
-            if (houveMelhora) break;
+            if (melhorou) break;
         }
+        if (!melhorou) break;
+    }
 
-    } while (houveMelhora);
-
-    std::cout << "\n========================================\n";
-    std::cout << "      OTIMIZAÇÃO POR BUSCA LOCAL\n";
-    std::cout << "========================================\n";
-    std::cout << "Fluxo original: " << encontrarFluxoMaximo(grafoOriginal, origem, destino) << "\n";
-    std::cout << "Fluxo otimizado: " << melhorFluxo << "\n";
-    std::cout << "Número de passos (melhorias): " << passos - 1 << "\n";
-    std::cout << "Grafo final otimizado:\n";
-    melhor->imprime();
-    std::cout << "========================================\n";
-
-    return {melhor, melhorFluxo};
+    return {std::move(melhorGrafo), melhorFluxo, melhorias};
 }
 
-
-bool FordFulkerson::bfs(Grafo* grafo, int origem, int destino, std::vector<int>& caminho) {
+bool FordFulkerson::bfs(Grafo* grafo, int origem, int destino, std::vector<int>& caminho, int& fluxoMinimo) {
     std::vector<bool> visitado(grafo->numeroVertices(), false);
     std::vector<int> anterior(grafo->numeroVertices(), -1);
+    std::vector<int> capacidadeMinima(grafo->numeroVertices(), INT_MAX);
     std::queue<int> fila;
 
     fila.push(origem);
@@ -109,75 +79,81 @@ bool FordFulkerson::bfs(Grafo* grafo, int origem, int destino, std::vector<int>&
 
         for (Vertice* vizinho : grafo->vizinhosVertice(atual)) {
             int indiceVizinho = vizinho->getIndice();
+            int residual = capacidadeResidual(grafo, atual, indiceVizinho);
 
-            if (!visitado[indiceVizinho] && capacidadeResidual(grafo, atual, indiceVizinho) > 0) {
-                fila.push(indiceVizinho);
-                visitado[indiceVizinho] = true;
+            if (!visitado[indiceVizinho] && residual > 0) {
+                capacidadeMinima[indiceVizinho] = std::min(capacidadeMinima[atual], residual);
                 anterior[indiceVizinho] = atual;
+                visitado[indiceVizinho] = true;
+                fila.push(indiceVizinho);
 
-                if (indiceVizinho == destino)
-                    break;
-            }
-        }
-    }
-
-    caminho.clear();
-    if (!visitado[destino]) return false;
-
-    for (int v = destino; v != -1; v = anterior[v])
-        caminho.insert(caminho.begin(), v);
-
-    return true;
-}
-
-int FordFulkerson::capacidadeResidual(Grafo* grafo, int u, int v) {
-    if (grafo->existeAresta(u, v)) {
-        return grafo->pesoAresta(u, v);
-    }
-    return 0;
-}
-
-void FordFulkerson::atualizarFluxo(Grafo* grafo, int u, int v, int fluxo) {
-    int capacidade = grafo->pesoAresta(u, v);
-    grafo->removerAresta(u, v);
-    if (capacidade - fluxo > 0) {
-        grafo->inserirAresta(u, v, capacidade - fluxo);
-    }
-
-    int reversa = grafo->existeAresta(v, u) ? grafo->pesoAresta(v, u) : 0;
-    grafo->removerAresta(v, u);
-    grafo->inserirAresta(v, u, reversa + fluxo);
-}
-
-Grafo* FordFulkerson::clonarGrafo(const Grafo* grafo) {
-    Grafo* copia = nullptr;
-
-    if (auto* gLista = dynamic_cast<const GrafoLista*>(grafo)) {
-        copia = new GrafoLista(true, true); // direcionado e ponderado
-        for (size_t i = 0; i < gLista->numeroVertices(); ++i)
-            copia->inserirVertice(gLista->labelVertice(i));
-
-        for (size_t i = 0; i < gLista->numeroVertices(); ++i) {
-            Vertice* v = gLista->getVertice(i);
-            for (Vertice* vizinho : gLista->vizinhosVertice(i)) {
-                int peso = gLista->pesoAresta(i, vizinho->getIndice());
-                copia->inserirAresta(i, vizinho->getIndice(), peso);
-            }
-        }
-    } else if (auto* gMatriz = dynamic_cast<const GrafoMatriz*>(grafo)) {
-        copia = new GrafoMatriz(true, true);
-        for (size_t i = 0; i < gMatriz->numeroVertices(); ++i)
-            copia->inserirVertice(gMatriz->labelVertice(i));
-
-        for (size_t i = 0; i < gMatriz->numeroVertices(); ++i) {
-            for (size_t j = 0; j < gMatriz->numeroVertices(); ++j) {
-                if (gMatriz->existeAresta(i, j)) {
-                    int peso = gMatriz->pesoAresta(i, j);
-                    copia->inserirAresta(i, j, peso);
+                if (indiceVizinho == destino) {
+                    fluxoMinimo = capacidadeMinima[destino];
+                    caminho.clear();
+                    for (int v = destino; v != -1; v = anterior[v]) {
+                        caminho.insert(caminho.begin(), v);
+                    }
+                    return true;
                 }
             }
         }
     }
+    return false;
+}
 
-    return copia;
+int FordFulkerson::capacidadeResidual(Grafo* grafo, int u, int v) {
+    return grafo->existeAresta(u, v) ? grafo->pesoAresta(u, v) : 0;
+}
+
+void FordFulkerson::atualizarFluxo(Grafo* grafo, int u, int v, int fluxo) {
+    int capacidadeDireta = capacidadeResidual(grafo, u, v);
+    if (capacidadeDireta - fluxo > 0) {
+        grafo->inserirAresta(u, v, capacidadeDireta - fluxo);
+    } else {
+        grafo->removerAresta(u, v);
+    }
+
+    int capacidadeReversa = capacidadeResidual(grafo, v, u);
+    grafo->inserirAresta(v, u, capacidadeReversa + fluxo);
+}
+
+std::unique_ptr<Grafo> FordFulkerson::clonarGrafo(const Grafo* grafo) {
+    if (auto* gLista = dynamic_cast<const GrafoLista*>(grafo)) {
+        auto copia = std::make_unique<GrafoLista>(true, true);
+        copiarEstruturaGrafo(gLista, copia.get());
+        return copia;
+    } else if (auto* gMatriz = dynamic_cast<const GrafoMatriz*>(grafo)) {
+        auto copia = std::make_unique<GrafoMatriz>(true, true);
+        copiarEstruturaGrafo(gMatriz, copia.get());
+        return copia;
+    }
+    return nullptr;
+}
+
+template<typename T>
+void FordFulkerson::copiarEstruturaGrafo(const T* original, T* copia) {
+    for (size_t i = 0; i < original->numeroVertices(); ++i) {
+        copia->inserirVertice(original->labelVertice(i));
+    }
+    
+    if (dynamic_cast<const GrafoLista*>(original)) {
+        auto* origLista = dynamic_cast<const GrafoLista*>(original);
+        auto* copiaLista = dynamic_cast<GrafoLista*>(copia);
+        for (size_t i = 0; i < origLista->numeroVertices(); ++i) {
+            for (Vertice* vizinho : origLista->vizinhosVertice(i)) {
+                copiaLista->inserirAresta(i, vizinho->getIndice(),
+                    origLista->pesoAresta(i, vizinho->getIndice()));
+            }
+        }
+    } else {
+        auto* origMatriz = dynamic_cast<const GrafoMatriz*>(original);
+        auto* copiaMatriz = dynamic_cast<GrafoMatriz*>(copia);
+        for (size_t i = 0; i < origMatriz->numeroVertices(); ++i) {
+            for (size_t j = 0; j < origMatriz->numeroVertices(); ++j) {
+                if (origMatriz->existeAresta(i, j)) {
+                    copiaMatriz->inserirAresta(i, j, origMatriz->pesoAresta(i, j));
+                }
+            }
+        }
+    }
 }

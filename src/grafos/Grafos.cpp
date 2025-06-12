@@ -56,13 +56,35 @@ void executarFordFulkerson(Grafo& grafo) {
     std::cin >> destino;
 
     switch (op) {
-      case 1:
-        FordFulkerson::encontrarFluxoMaximo(&grafo, origem, destino);
-        break;
-      case 2:
-        FordFulkerson::otimizadoFluxoBuscaLocal(&grafo, origem, destino);
+    case 1: {
+        auto resultado = FordFulkerson::encontrarFluxoMaximo(&grafo, origem, destino);
+        
+        std::cout << "\n========================================";
+        std::cout << "\n       RESULTADO FORD-FULKERSON";
+        std::cout << "\n========================================";
+        std::cout << "\nFluxo máximo encontrado: " << resultado.fluxoMaximo;
+        std::cout << "\nNúmero de passos (iterações BFS): " << resultado.passosExecucao;
+        std::cout << "\n========================================\n";
         break;
     }
+    case 2: {
+        auto resultadoOriginal = FordFulkerson::encontrarFluxoMaximo(&grafo, origem, destino);
+        auto resultadoOtimizado = FordFulkerson::otimizarFluxoBuscaLocal(&grafo, origem, destino);
+        
+        std::cout << "\n========================================";
+        std::cout << "\n     COMPARAÇÃO DE RESULTADOS";
+        std::cout << "\n========================================";
+        std::cout << "\nSOLUÇÃO ORIGINAL:";
+        std::cout << "\n  Fluxo máximo: " << resultadoOriginal.fluxoMaximo;
+        std::cout << "\n  Passos utilizados: " << resultadoOriginal.passosExecucao;
+        
+        std::cout << "\n\nSOLUÇÃO OTIMIZADA:";
+        std::cout << "\n  Fluxo máximo: " << resultadoOtimizado.fluxoMaximo;
+        std::cout << "\n  Melhorias encontradas: " << resultadoOtimizado.melhoriasEncontradas;
+        std::cout << "\n========================================\n";
+        break;
+    }
+}
 
     std::cout << "Voltando...\n";
   } while (op != 2);

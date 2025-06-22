@@ -83,7 +83,9 @@ void AlgoritmoDijkstra::rodar(
   }
 
   // Impressão dos resultados
-  for (const auto& [indice, caminho] : menorCaminhoAteVertice) {
+  for (const auto& pair : menorCaminhoAteVertice) {
+    const int indice = pair.first;
+    const Pointer<Caminho>& caminho = pair.second;
     std::cout << "Caminho para " << indice << ": ";
     for (const Vertice* vertice : caminho->caminho) {
       std::cout << vertice->getIndice() << " ";

@@ -15,6 +15,8 @@
 
 #include "grafos/FordFulkerson.h"
 
+#include "grafos/ArvoreGeradoraCustoMinimo.h"
+
 const std::string TITULO_GRAFO_LISTA = "Grafo Lista de Adjacência";
 const std::string TITULO_GRAFO_MATRIZ = "Grafo Matriz de Adjacência";
 
@@ -57,37 +59,94 @@ void executarFordFulkerson(Grafo& grafo) {
 
     switch (op) {
     case 1: {
-        auto resultado = FordFulkerson::encontrarFluxoMaximo(&grafo, origem, destino);
-        
-        std::cout << "\n========================================";
-        std::cout << "\n       RESULTADO FORD-FULKERSON";
-        std::cout << "\n========================================";
-        std::cout << "\nFluxo máximo encontrado: " << resultado.fluxoMaximo;
-        std::cout << "\nNúmero de passos (iterações BFS): " << resultado.passosExecucao;
-        std::cout << "\n========================================\n";
-        break;
+      auto resultado = FordFulkerson::encontrarFluxoMaximo(&grafo, origem, destino);
+
+      std::cout << "\n========================================";
+      std::cout << "\n       RESULTADO FORD-FULKERSON";
+      std::cout << "\n========================================";
+      std::cout << "\nFluxo máximo encontrado: " << resultado.fluxoMaximo;
+      std::cout << "\nNúmero de passos (iterações BFS): " << resultado.passosExecucao;
+      std::cout << "\n========================================\n";
+      break;
     }
     case 2: {
-        auto resultadoOriginal = FordFulkerson::encontrarFluxoMaximo(&grafo, origem, destino);
-        auto resultadoOtimizado = FordFulkerson::otimizarFluxoBuscaLocal(&grafo, origem, destino);
-        
-        std::cout << "\n========================================";
-        std::cout << "\n     COMPARAÇÃO DE RESULTADOS";
-        std::cout << "\n========================================";
-        std::cout << "\nSOLUÇÃO ORIGINAL:";
-        std::cout << "\n  Fluxo máximo: " << resultadoOriginal.fluxoMaximo;
-        std::cout << "\n  Passos utilizados: " << resultadoOriginal.passosExecucao;
-        
-        std::cout << "\n\nSOLUÇÃO OTIMIZADA:";
-        std::cout << "\n  Fluxo máximo: " << resultadoOtimizado.fluxoMaximo;
-        std::cout << "\n  Melhorias encontradas: " << resultadoOtimizado.melhoriasEncontradas;
-        std::cout << "\n========================================\n";
-        break;
+      auto resultadoOriginal = FordFulkerson::encontrarFluxoMaximo(&grafo, origem, destino);
+      auto resultadoOtimizado = FordFulkerson::otimizarFluxoBuscaLocal(&grafo, origem, destino);
+
+      std::cout << "\n========================================";
+      std::cout << "\n     COMPARAÇÃO DE RESULTADOS";
+      std::cout << "\n========================================";
+      std::cout << "\nSOLUÇÃO ORIGINAL:";
+      std::cout << "\n  Fluxo máximo: " << resultadoOriginal.fluxoMaximo;
+      std::cout << "\n  Passos utilizados: " << resultadoOriginal.passosExecucao;
+
+      std::cout << "\n\nSOLUÇÃO OTIMIZADA:";
+      std::cout << "\n  Fluxo máximo: " << resultadoOtimizado.fluxoMaximo;
+      std::cout << "\n  Melhorias encontradas: " << resultadoOtimizado.melhoriasEncontradas;
+      std::cout << "\n========================================\n";
+      break;
     }
-}
+    }
 
     std::cout << "Voltando...\n";
-  } while (op != 2);
+  } while (op != 3);
+}
+
+void executarAGM(Grafo& grafo) {
+  int op;
+  do
+  {
+    std::cout << "\n--- Árvore Geradora de Custo Mínimo ---\n";
+    std::cout << "1 - Prim\n";
+    std::cout << "2 - Krustal\n";
+    std::cout << "3 - Voltar\n";
+    std::cout << "Escolha: ";
+    std::cin >> op;
+
+    switch (op) {
+    case 1: {
+
+      int raiz;
+      std::cout << "Digite o índice do vértice de origem: ";
+      std::cin >> raiz;
+      ArvoreGeradoraCustoMinimo geradora(grafo);
+
+      auto start = std::chrono::high_resolution_clock::now();
+      const float custoTotal = geradora.prim(raiz);
+      auto end = std::chrono::high_resolution_clock::now();
+
+      auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+      std::cout << "\n========================================";
+      std::cout << "\n          RESULTADO AGM PRIM";          
+      std::cout << "\n========================================";
+      std::cout << "\nCusto total encontrado: " << custoTotal;
+      std::cout << "\nTempo de execução: " << duration.count() << "ms";
+      std::cout << "\n========================================\n";
+
+      break;
+    }
+    case 2: {
+      ArvoreGeradoraCustoMinimo geradora(grafo);
+
+      auto start = std::chrono::high_resolution_clock::now();
+      const float custoTotal = geradora.kruskal();
+      auto end = std::chrono::high_resolution_clock::now();
+
+      auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+      std::cout << "\n========================================";
+      std::cout << "\n         RESULTADO AGM KRUSKAL";
+      std::cout << "\n========================================";
+      std::cout << "\nCusto total encontrado: " << custoTotal;
+      std::cout << "\nTempo de execução: " << duration.count() << "ms";
+      std::cout << "\n========================================\n";
+      break;
+    }
+    }
+
+    std::cout << "Voltando...\n";
+  } while (op != 3);
 }
 
 template <typename T>
@@ -102,7 +161,8 @@ void menuGrafo(T& grafo, const std::string& tituloGrafo) {
         std::cout << "5 - Remover aresta\n";
         std::cout << "6 - Exibir grafo\n";
         std::cout << "7 - Ford-Fulkerson \n";
-        std::cout << "8 - Voltar\n";
+        std::cout << "8 - Arvore Geradora de Custo Mínimo (AGM) \n";
+        std::cout << "9 - Voltar\n";
         std::cout << "Escolha: ";
         std::cin >> op;
 
@@ -162,9 +222,12 @@ void menuGrafo(T& grafo, const std::string& tituloGrafo) {
                 grafo.imprime();
                 break;
             case 7:
-                executarFordFulkerson(grafo);
-                break;
+              executarFordFulkerson(grafo);
+              break;
             case 8:
+              executarAGM(grafo);
+              break;
+            case 9:
                 std::cout << "Voltando...\n";
                 break;
             default:
@@ -214,7 +277,7 @@ void lerGrafo()
   std::cout << "  1 - Matriz de Adjacência\n";
   std::cout << "  2 - Lista de Adjacência\n";
   std::cout << ">> ";
-  
+
   int tipo;
   std::cin >> tipo;
   Adjacencia adjacencia = tipo == 1 ? Adjacencia::MATRIZ : Adjacencia::LISTA;
@@ -223,8 +286,8 @@ void lerGrafo()
   std::string caminho;
   std::cin >> caminho;
 
-  if (caminho.substr(0,2).compare("ex") == 0) {
-    caminho = "res/exemplo" + caminho.substr(2,3) + ".txt";
+  if (caminho.substr(0, 2).compare("ex") == 0) {
+    caminho = "res/exemplo" + caminho.substr(2, 3) + ".txt";
   }
 
   std::cout << "\nLendo grafo do arquivo: " << caminho << "...\n";
@@ -237,39 +300,83 @@ void lerGrafo()
     grafo->imprime();
     std::cout << "\n";
 
-    executarFordFulkerson(*grafo);
+    int op;
+    do {
+      std::cout << "\n===== MENU DE ALGORITMOS =====\n";
+      std::cout << "1 - Ford-Fulkerson\n";
+      std::cout << "2 - Árvore Geradora de Custo Mínimo (AGM)\n";
+      std::cout << "3 - Busca em Profundidade (DFS)\n";
+      std::cout << "4 - Busca em Largura (BFS)\n";
+      std::cout << "5 - Dijkstra (Caminhos Mínimos)\n";
+      std::cout << "6 - Coloração do Grafo\n";
+      std::cout << "7 - Exibir grafo\n";
+      std::cout << "8 - Sair\n";
+      std::cout << "Escolha uma opção: ";
+      std::cin >> op;
 
-    int origem;
-    std::cout << "Digite o índice do vértice de origem: ";
-    std::cin >> origem;
+      switch (op) {
+      case 1:
+        executarFordFulkerson(*grafo);
+        break;
+      case 2:
+        executarAGM(*grafo);
+        break;
+      case 3: {
+        int origem;
+        std::cout << "Digite o índice do vértice de origem: ";
+        std::cin >> origem;
+        std::cout << "\n========================================\n";
+        std::cout << "       BUSCA EM PROFUNDIDADE (DFS)\n";
+        std::cout << "========================================\n";
+        BuscaProfundidade buscaProfundidade(*grafo);
+        buscaProfundidade.percorrerTodosOsVertices(origem);
+        break;
+      }
+      case 4: {
+        int origem;
+        std::cout << "Digite o índice do vértice de origem: ";
+        std::cin >> origem;
+        std::cout << "\n========================================\n";
+        std::cout << "        BUSCA EM LARGURA (BFS)\n";
+        std::cout << "========================================\n";
+        BuscaLargura buscaLargura(*grafo);
+        buscaLargura.caminhoTodosOsVertices(origem);
+        break;
+      }
+      case 5: {
+        int origem;
+        std::cout << "Digite o índice do vértice de origem: ";
+        std::cin >> origem;
+        std::cout << "\n========================================\n";
+        std::cout << "     ALGORITMO DE DIJKSTRA (Caminhos)\n";
+        std::cout << "========================================\n";
+        AlgoritmoDijkstra algoritmo(*grafo);
+        algoritmo.rodar(origem);
+        break;
+      }
+      case 6: {
+        std::cout << "\n========================================\n";
+        std::cout << "     COLORAÇÃO DO GRAFO\n";
+        std::cout << "========================================\n";
+        executarColoracao(*grafo, "Welsh-Powell", [](Coloracao& c) { c.colorir_WelshPowell(); });
+        executarColoracao(*grafo, "DSatur", [](Coloracao& c) { c.colorir_DSatur(); });
+        executarColoracao(*grafo, "Greedy", [](Coloracao& c) { c.colorir_Greedy(); });
+        executarColoracao(*grafo, "Força Bruta", [](Coloracao& c) { c.colorir_BruteForce(); });
+        break;
+      }
+      case 7:
+        grafo->imprime();
+        break;
+      case 8:
+        std::cout << "Saindo do menu de algoritmos...\n";
+        break;
+      default:
+        std::cout << "Opção inválida! Tente novamente.\n";
+      }
+    } while (op != 8);
 
-    std::cout << "\n========================================\n";
-    std::cout << "       BUSCA EM PROFUNDIDADE (DFS)\n";
-    std::cout << "========================================\n";
-    BuscaProfundidade buscaProfundidade(*grafo);
-    buscaProfundidade.percorrerTodosOsVertices(origem);
-
-    std::cout << "\n========================================\n";
-    std::cout << "        BUSCA EM LARGURA (BFS)\n";
-    std::cout << "========================================\n";
-    BuscaLargura buscaLargura(*grafo);
-    buscaLargura.caminhoTodosOsVertices(origem);
-
-    std::cout << "\n========================================\n";
-    std::cout << "     ALGORITMO DE DIJKSTRA (Caminhos)\n";
-    std::cout << "========================================\n";
-    AlgoritmoDijkstra algoritmo(*grafo);
-    algoritmo.rodar(origem);
-
-    std::cout << "\n========================================\n";
-    std::cout << "     COLORAÇÃO DO GRAFO\n";
-    std::cout << "========================================\n";
-
-    executarColoracao(*grafo, "Welsh-Powell", [](Coloracao& c) { c.colorir_WelshPowell(); });
-    executarColoracao(*grafo, "DSatur", [](Coloracao& c) { c.colorir_DSatur(); });
-    executarColoracao(*grafo, "Greedy", [](Coloracao& c) { c.colorir_Greedy(); });
-    executarColoracao(*grafo, "Força Bruta", [](Coloracao& c) { c.colorir_BruteForce(); });
-  } else {
+  }
+  else {
     std::cout << "\n[Erro] Não foi possível ler o grafo do arquivo.\n";
   }
 }

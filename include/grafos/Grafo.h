@@ -9,6 +9,7 @@
 //------------------------------------------------------------
 
 class Vertice;
+class Aresta;
 
 //------------------------------------------------------------
 
@@ -78,6 +79,8 @@ public:
   virtual void resetarCores() = 0;
 
   virtual Grafo* clonar() const = 0;
+
+  virtual std::vector<Aresta*> getArestas() const = 0;
 };
 
 //------------------------------------------------------------

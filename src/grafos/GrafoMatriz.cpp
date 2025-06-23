@@ -259,3 +259,17 @@ GrafoMatriz* GrafoMatriz::clonar() const {
 }
 
 //------------------------------------------------------------
+
+std::vector<Aresta*> GrafoMatriz::getArestas() const {
+  std::vector<Aresta*> arestasList;
+  for (int i = 0; i < matriz.size(); ++i) {
+    for (int j = 0; j < matriz[i].size(); ++j) {
+      if (matriz[i][j] != nullptr) {
+        arestasList.push_back(matriz[i][j]);
+      }
+    }
+  }
+  return arestasList;
+}
+
+//------------------------------------------------------------

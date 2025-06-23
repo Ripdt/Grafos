@@ -275,3 +275,16 @@ GrafoLista* GrafoLista::clonar() const {
 }
 
 //------------------------------------------------------------
+
+std::vector<Aresta*> GrafoLista::getArestas() const
+{
+  std::vector<Aresta*> arestas;
+  for (auto& pair : listaAdjacencia) {
+    for (const Aresta& aresta : pair.second) {
+      arestas.push_back(const_cast<Aresta*>(&aresta));
+    }
+  }
+  return arestas;
+}
+
+//------------------------------------------------------------

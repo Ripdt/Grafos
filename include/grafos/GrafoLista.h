@@ -79,6 +79,8 @@ public:
 
   GrafoLista* clonar() const;
 
+  std::vector<Aresta*> getArestas() const override;
+
 private:
   Vertice* buscaVertice(const size_t indice) const;
 

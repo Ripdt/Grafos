@@ -9,9 +9,8 @@
 #include "primitives/Pointer.h"
 
 //------------------------------------------------------------
+
 #include <vector>
-#include "Grafo.h"
-#include "Aresta.h"
 
 class GrafoMatriz : public Grafo {
 private:
@@ -74,6 +73,8 @@ public:
   void resetarCores() override;
 
   GrafoMatriz* clonar() const;
+
+  std::vector<Aresta*> getArestas() const override;
 };
 
 //------------------------------------------------------------

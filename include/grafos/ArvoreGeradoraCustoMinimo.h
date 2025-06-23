@@ -16,8 +16,6 @@ public:
   float prim(int raiz = 0);
 
 private:
-  std::vector<Aresta*> arestasOrdenadas() const;
-
   Grafo& g;
 };
 

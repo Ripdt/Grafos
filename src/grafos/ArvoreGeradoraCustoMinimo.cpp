@@ -4,10 +4,9 @@
 
 #include <algorithm>
 #include <list>
+#include <set>
 
-float ArvoreGeradoraCustoMinimo::prim( // usa vertice - grafos densos (muita aresta)
-  const int raiz
-)
+float ArvoreGeradoraCustoMinimo::prim(const int raiz)
 {
   std::list<Vertice*> vertices;
   for (int i = 0; i < g.numeroVertices(); i++) {
@@ -16,24 +15,49 @@ float ArvoreGeradoraCustoMinimo::prim( // usa vertice - grafos densos (muita are
   Vertice* pivo = g.getVertice(raiz);
   vertices.remove(pivo);
 
-  std::vector<Aresta*> arestas = arestasOrdenadas();
+  std::set<Vertice*> visitados; // evita buscas lineares pela lista (não é necessário para funcionamento, apenas desempenho)
+  visitados.insert(pivo);
+
+  std::vector<Aresta*> arestas = g.getArestas();
+
+  std::sort(arestas.begin(), arestas.end(), [](const Aresta* a, const Aresta* b) {
+    return a->getPeso() < b->getPeso();
+  });
+
   std::vector<Aresta*> solucao;
 
   float custoTotal = 0;
 
   while (!vertices.empty()) {
-    Aresta* aresta = arestas.back();
-    arestas.pop_back();
-
-    Vertice* u = aresta->getOrigem();
-    Vertice* v = aresta->getDestino();
-    auto itU = std::find(vertices.begin(), vertices.end(), u);
-    auto itV = std::find(vertices.begin(), vertices.end(), v);
-    if (itU != vertices.end() ^ itV != vertices.end()) {
-      solucao.push_back(aresta);
-      vertices.erase(itU != vertices.end() ? itU : itV);
-      custoTotal += aresta->getPeso();
+    std::list<Vertice*>::iterator itNovo;
+    std::vector<Aresta*>::iterator itAresta = arestas.begin();
+    for (; itAresta != arestas.end(); ++itAresta) {
+      Vertice* u = (*itAresta)->getOrigem();
+      Vertice* v = (*itAresta)->getDestino();
+      const bool uVisitado = visitados.count(u) > 0;
+      const bool vVisitado = visitados.count(v) > 0;
+      const auto itU = std::find(vertices.begin(), vertices.end(), u);
+      const auto itV = std::find(vertices.begin(), vertices.end(), v);
+      if (uVisitado && itV != vertices.end()) {
+        itNovo = itV;
+        break;
+      }
+      if (vVisitado && itU != vertices.end()) {
+        itNovo = itU;
+        break;
+      }
     }
+
+    if (itAresta == arestas.end()) break; // sem arestas elegíveis
+
+    Aresta* aresta = *itAresta;
+    Vertice* novo = *itNovo;
+    solucao.push_back(aresta);
+    vertices.erase(itNovo);
+    visitados.insert(novo);
+    custoTotal += aresta->getPeso();
+
+    arestas.erase(itAresta);
   }
 
   return custoTotal;
@@ -41,7 +65,11 @@ float ArvoreGeradoraCustoMinimo::prim( // usa vertice - grafos densos (muita are
 
 float ArvoreGeradoraCustoMinimo::kruskal() const // usa arestas - grafos esparsos (pouca aresta)
 {
-  std::vector<Aresta*> arestas = arestasOrdenadas();
+  std::vector<Aresta*> arestas = g.getArestas();
+
+  std::sort(arestas.begin(), arestas.end(), [](const Aresta* a, const Aresta* b) {
+    return a->getPeso() > b->getPeso();
+    });
   std::vector<Aresta*> solucao;
 
   std::vector<std::vector<Vertice*>> florestas;
@@ -74,15 +102,4 @@ float ArvoreGeradoraCustoMinimo::kruskal() const // usa arestas - grafos esparso
   }
 
   return custoTotal;
-}
-
-std::vector<Aresta*> ArvoreGeradoraCustoMinimo::arestasOrdenadas() const
-{
-  std::vector<Aresta*> arestas = g.getArestas();
-
-  std::sort(arestas.begin(), arestas.end(), [](const Aresta* a, const Aresta* b) {
-    return a->getPeso() > b->getPeso();
-    });
-
-  return arestas;
 }

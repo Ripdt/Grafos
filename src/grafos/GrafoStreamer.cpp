@@ -40,7 +40,7 @@ Grafo* GrafoStreamer::ler(
 {
   Grafo* grafo = nullptr;
   try {
-    std::ifstream file("/Users/joao.prudencio/Desktop/facul/Grafos/res/ford/dense_graph_v30_maxflow149.txt");
+    std::ifstream file(path);
 
     if (!file.is_open())
     {
